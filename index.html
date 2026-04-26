@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ancestors — Original Botanica · Coming soon</title>
+<meta name="description" content="A perpetual virtual altar to honor those who came before us. From Original Botanica in the Bronx, since 1959. Coming soon.">
+
+<!-- Open Graph / social previews -->
+<meta property="og:title" content="Ancestors — Original Botanica">
+<meta property="og:description" content="A flame that never goes out for those we never forget. A perpetual virtual altar from Original Botanica. Coming soon.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ancestors.originalbotanica.com">
+
+<!-- Brand fonts: same as originalbotanica.com -->
+<link rel="stylesheet" href="https://use.typekit.net/xvx5ipz.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0c0a08;
+    --bg-2: #15110d;
+    --amber: #f1a645;
+    --amber-warm: #ee8743;
+    --rust: #d44235;
+    --gold-soft: #b89243;
+    --cream: #f6ead0;
+    --ink: #ebe1c8;
+    --muted: #8a7e69;
+    --line: #2a2218;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "brandon-grotesque", "Brandon Grotesque", "Helvetica Neue", system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+  body {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(241, 166, 69, 0.10), transparent 55%),
+      radial-gradient(ellipse at 50% 100%, rgba(241, 166, 69, 0.05), transparent 55%),
+      var(--bg);
+    display: flex; flex-direction: column;
+  }
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 500;
+    color: var(--cream);
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1.15;
+    margin-bottom: 1.4rem;
+  }
+
+  /* ============ HEADER (logo) ============ */
+  header {
+    padding: 2.5rem 1.5rem 1rem;
+    display: flex; justify-content: center;
+  }
+  .brand-logo {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    line-height: 1;
+  }
+  .brand-logo img { height: 80px; width: auto; display: block; }
+  .brand-logo .tag {
+    font-family: "brandon-grotesque", sans-serif;
+    font-weight: 900; color: var(--rust);
+    font-size: 0.95rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  @media (max-width: 720px) {
+    .brand-logo img { height: 60px; }
+    .brand-logo .tag { font-size: 0.78rem; letter-spacing: 0.18em; }
+  }
+
+  /* ============ HERO ============ */
+  main {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+    padding: 1rem 1.5rem 3rem;
+  }
+  .candle-wrap {
+    width: 110px;
+    margin: 1.5rem 0 2.5rem;
+  }
+  .candle-wrap img {
+    width: 100%; height: auto; display: block;
+  }
+  .copy { max-width: 560px; }
+  .eyebrow {
+    font-family: "brandon-grotesque", sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--amber); margin-bottom: 1rem; font-weight: 500;
+  }
+  .lede {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 1.18rem; color: var(--ink); line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+  .small {
+    color: var(--muted); font-size: 0.95rem;
+    max-width: 480px; margin: 0 auto;
+  }
+  .small a { color: var(--amber); text-decoration: none; }
+  .small a:hover { color: var(--amber-warm); }
+
+  /* ============ FOOTER ============ */
+  footer {
+    padding: 3rem 1.5rem 2rem;
+    text-align: center;
+    border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 0.88rem;
+  }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--amber); }
+  footer .links { margin-top: 0.6rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-logo">
+    <img src="logo-original-botanica.svg" alt="Original Botanica">
+    <div class="tag">Ancestor Altar</div>
+  </div>
+</header>
+
+<main>
+  <div class="candle-wrap">
+    <img src="white-candle.png" alt="Plain white 7-day prayer candle">
+  </div>
+
+  <div class="copy">
+    <div class="eyebrow">Coming soon</div>
+    <h1>A flame that never goes out<br>for those we never forget.</h1>
+    <p class="lede">
+      A perpetual virtual altar to honor a loved one who has passed. Tended from the Bronx, by the family who has kept Original Botanica's doors open since 1959.
+    </p>
+    <p class="small">
+      To be the first to know when we light the altar, subscribe to the Original Botanica newsletter at <a href="https://originalbotanica.com">originalbotanica.com</a>.
+    </p>
+  </div>
+</main>
+
+<footer>
+  <p>Original Botanica  ·  The Bronx, NY  ·  Family-owned since 1959</p>
+  <div class="links">
+    <a href="https://originalbotanica.com">originalbotanica.com</a>  ·
+    <a href="https://altar.originalbotanica.com">altar.originalbotanica.com</a>
+  </div>
+</footer>
+
+</body>
+</html>
