@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const TIERS = [
@@ -25,18 +25,21 @@ const TIERS = [
 
 export default function LightACandlePage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [billingInterval, setBillingInterval] = useState('monthly');
 
   // If Stripe redirected the user back to /light-a-candle?canceled=1, show a friendly note.
+  // Read directly from window.location to avoid useSearchParams (which would require a Suspense boundary).
   useEffect(() => {
-    if (searchParams.get('canceled') === '1') {
-      setErrorMsg('Checkout was cancelled. Your candle is waiting — try again whenever you are ready.');
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('canceled') === '1') {
+        setErrorMsg('Checkout was cancelled. Your candle is waiting — try again whenever you are ready.');
+      }
     }
-  }, [searchParams]);
+  }, []);
 
   // form state
   const [lovedOneName, setLovedOneName] = useState('');
