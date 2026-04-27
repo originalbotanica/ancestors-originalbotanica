@@ -17,13 +17,15 @@ export default function ResetPasswordPage() {
   //   1. Modern PKCE flow with ?code=... → we exchange the code for a session
   //   2. Through /auth/callback which already exchanged the code → session cookie present
   //   3. Legacy hash-based flow with #access_token=... → browser client auto-handles it
-  // Whichever path got us here, once a session exists we let them set a new password.
+  // We only render the form once a real session is in hand. Without one,
+  // updateUser({ password }) would fail with "Auth session missing".
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
+    let cancelled = false;
 
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-        setReady(true);
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        if (!cancelled) setReady(true);
       }
     });
 
@@ -31,24 +33,50 @@ export default function ResetPasswordPage() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     if (code) {
-      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-        if (error) {
-          setErrorMsg('This reset link has expired or already been used. Please request a new one.');
+      supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
+        if (cancelled) return;
+        if (error || !data?.session) {
+          setErrorMsg(
+            'This reset link has expired or already been used. Please request a new one from the Forgot password page.'
+          );
         } else {
           setReady(true);
           // Strip the code from the URL so refreshing the page doesn't re-exchange.
           window.history.replaceState({}, '', '/account/reset-password');
         }
       });
-      return () => sub.subscription.unsubscribe();
+      return () => {
+        cancelled = true;
+        sub.subscription.unsubscribe();
+      };
     }
 
     // Paths 2 & 3: just check if we already have a session
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setReady(true);
+      if (cancelled) return;
+      if (data.session) {
+        setReady(true);
+      } else {
+        // Give onAuthStateChange a moment to fire (hash-based recovery flow),
+        // then tell the user the link is bad if still no session.
+        setTimeout(() => {
+          if (!cancelled) {
+            supabase.auth.getSession().then(({ data: d }) => {
+              if (!cancelled && !d.session) {
+                setErrorMsg(
+                  'This reset link has expired or already been used. Please request a new one from the Forgot password page.'
+                );
+              }
+            });
+          }
+        }, 1500);
+      }
     });
 
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   async function handleSubmit(e) {
@@ -94,7 +122,19 @@ export default function ResetPasswordPage() {
           <p className="wizard-sub">Choose a password you&rsquo;ll remember.</p>
 
           {!ready ? (
-            <p className="wizard-note">Verifying your reset link…</p>
+            errorMsg ? (
+              <>
+                <p className="wizard-error">{errorMsg}</p>
+                <div className="wizard-nav">
+                  <span />
+                  <Link href="/account/forgot-password" className="btn-cta">
+                    Request a new link
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <p className="wizard-note">Verifying your reset link…</p>
+            )
           ) : (
             <form onSubmit={handleSubmit}>
               <label htmlFor="password">New password</label>
