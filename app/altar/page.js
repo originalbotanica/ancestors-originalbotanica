@@ -75,6 +75,10 @@ export default async function AltarPage() {
             ))}
           </div>
         )}
+
+        <div className="cta-row">
+          <Link href="/light-a-candle" className="btn-cta">Light a Candle for Someone You Love</Link>
+        </div>
       </main>
 
       <footer className="site-footer">

@@ -271,6 +271,227 @@ a:hover { color: var(--amber-warm); }
   border-color: var(--amber);
 }
 
+/* ============ SIGNUP WIZARD ============ */
+.wizard-main {
+  flex: 1;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 1rem 1.5rem 4rem;
+}
+.wizard {
+  width: 100%; max-width: 560px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2.5rem 2rem 2rem;
+}
+.wizard h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500; color: var(--cream);
+  font-size: 1.7rem; line-height: 1.2;
+  text-align: center; margin-bottom: 0.5rem;
+}
+.wizard-sub {
+  text-align: center; color: var(--muted);
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 1rem; margin-bottom: 1.5rem;
+}
+.wizard-progress {
+  display: flex; gap: 0.5rem; justify-content: center;
+  margin-bottom: 2rem;
+}
+.wizard-progress .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--line); transition: background .2s;
+}
+.wizard-progress .dot.active { background: var(--amber); }
+.wizard label {
+  display: block;
+  font-family: "brandon-grotesque", sans-serif;
+  font-size: 0.75rem; color: var(--amber);
+  letter-spacing: 0.16em; text-transform: uppercase;
+  margin-bottom: 0.5rem; margin-top: 1.25rem; font-weight: 500;
+}
+.wizard label .optional {
+  color: var(--muted); text-transform: none;
+  letter-spacing: 0; font-weight: 400;
+}
+.wizard input[type="text"],
+.wizard input[type="email"],
+.wizard input[type="date"],
+.wizard input[type="password"],
+.wizard textarea {
+  width: 100%;
+  background: var(--bg); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 3px;
+  padding: 0.85rem 1rem;
+  font-family: "brandon-grotesque", sans-serif; font-size: 1rem;
+  transition: border-color .2s;
+}
+.wizard textarea {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-size: 1.05rem;
+  resize: vertical; min-height: 110px;
+}
+.wizard input:focus, .wizard textarea:focus {
+  outline: none; border-color: var(--amber);
+}
+.wizard input::placeholder, .wizard textarea::placeholder { color: var(--muted); }
+
+.photo-upload-disabled {
+  border: 1px dashed var(--line); border-radius: 4px;
+  padding: 1.5rem; text-align: center;
+  color: var(--muted); font-style: italic;
+  font-family: 'Playfair Display', serif;
+  background: rgba(0, 0, 0, 0.15);
+}
+.photo-upload-disabled span { display: block; font-size: 1rem; margin-bottom: 0.5rem; }
+.photo-upload-disabled small {
+  font-family: "brandon-grotesque", sans-serif;
+  font-style: normal; font-size: 0.78rem; color: var(--muted);
+  display: block; line-height: 1.5;
+}
+
+.tier-toggle {
+  display: flex; justify-content: center;
+  gap: 0.5rem; margin: 1.5rem 0 1rem;
+}
+.tier-toggle button {
+  background: var(--bg); border: 1px solid var(--line); color: var(--muted);
+  padding: 0.5rem 1.1rem; border-radius: 999px; cursor: pointer;
+  font-family: "brandon-grotesque", sans-serif;
+  font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+  transition: all .2s;
+}
+.tier-toggle button.active {
+  background: var(--amber); color: #1a1208; border-color: var(--amber);
+}
+
+.tiers {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+@media (max-width: 560px) { .tiers { grid-template-columns: 1fr; } }
+.tier {
+  text-align: left; padding: 1.4rem;
+  background: var(--bg); color: inherit;
+  border: 1px solid var(--line); border-radius: 4px;
+  cursor: pointer; transition: all .2s; font-family: inherit;
+}
+.tier:hover { border-color: var(--gold-soft); }
+.tier.selected {
+  border-color: var(--amber);
+  background: rgba(241, 166, 69, 0.05);
+}
+.tier-name {
+  font-family: "brandon-grotesque", sans-serif;
+  color: var(--amber); font-size: 0.78rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  margin-bottom: 0.5rem; font-weight: 500;
+}
+.tier-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; color: var(--cream);
+}
+.tier-price small {
+  color: var(--muted); font-size: 0.6em;
+  font-family: "brandon-grotesque", sans-serif;
+  letter-spacing: 0.12em;
+}
+.tier-desc {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 0.92rem; color: var(--ink); opacity: 0.88;
+  line-height: 1.55; margin-top: 0.7rem;
+}
+
+.wizard-note {
+  margin-top: 1.5rem; padding: 1rem;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 3px;
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 0.92rem; color: var(--muted); line-height: 1.55;
+}
+.wizard-error {
+  margin-top: 1rem; color: var(--rust);
+  font-family: 'Playfair Display', serif; font-style: italic;
+  text-align: center;
+}
+.wizard-nav {
+  display: flex; justify-content: space-between;
+  margin-top: 2rem; gap: 1rem;
+}
+.wizard-nav button { flex: 1; }
+.wizard-nav .btn-cta {
+  background: linear-gradient(180deg, var(--amber) 0%, var(--amber-warm) 100%);
+  color: #1a1208;
+  font-family: "brandon-grotesque", sans-serif;
+  font-weight: 600; font-size: 0.85rem;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  border: none; border-radius: 999px;
+  padding: 0.85rem 1.6rem; cursor: pointer;
+  transition: transform .15s, box-shadow .15s, opacity .15s;
+  box-shadow: 0 6px 20px rgba(241, 166, 69, 0.28);
+}
+.wizard-nav .btn-cta:disabled { opacity: 0.55; cursor: not-allowed; }
+.wizard-nav .btn-cta:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(241, 166, 69, 0.42);
+}
+
+/* "Light a candle" CTA on home + altar */
+.cta-row {
+  display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+  margin: 2.5rem 0 1.5rem;
+}
+.btn-cta {
+  display: inline-block;
+  background: linear-gradient(180deg, var(--amber) 0%, var(--amber-warm) 100%);
+  color: #1a1208;
+  font-family: "brandon-grotesque", sans-serif;
+  font-weight: 600; font-size: 0.85rem;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  border: none; border-radius: 999px;
+  padding: 0.95rem 1.8rem; cursor: pointer;
+  text-decoration: none;
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 6px 20px rgba(241, 166, 69, 0.28);
+}
+.btn-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(241, 166, 69, 0.42);
+  color: #1a1208;
+}
+
+/* ============ SUCCESS PAGE (after lighting a candle) ============ */
+.success-main {
+  flex: 1; max-width: 640px; margin: 0 auto;
+  padding: 1rem 1.5rem 4rem; text-align: center;
+}
+.success-flame {
+  width: 110px; margin: 1rem auto 1.5rem;
+}
+.success-flame img { width: 100%; height: auto; display: block; }
+.success-link-lede {
+  margin-top: 2rem; color: var(--muted);
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 1rem;
+}
+.success-link {
+  margin: 0.5rem auto 1.5rem; max-width: 520px;
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 3px;
+  padding: 0.75rem 1rem; overflow-x: auto;
+}
+.success-link code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: var(--amber); font-size: 0.92rem;
+  white-space: nowrap;
+}
+.success-actions {
+  display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+.success-note {
+  max-width: 520px; margin: 2rem auto 0; text-align: left;
+}
+
 /* ============ FOOTER ============ */
 .site-footer {
   padding: 3rem 1.5rem 2rem;

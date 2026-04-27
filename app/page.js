@@ -96,6 +96,10 @@ export default function Home() {
             </p>
           </form>
 
+          <div className="cta-row">
+            <Link href="/light-a-candle" className="btn-cta">Light a Candle</Link>
+          </div>
+
           <p className="altar-link">
             <Link href="/altar">Visit the altar &rarr;</Link>
           </p>

@@ -1,0 +1,303 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
+const TIERS = [
+  {
+    id: 'memorial',
+    name: 'Memorial Candle',
+    monthly: 9,
+    yearly: 89,
+    description:
+      'One perpetual candle for one loved one. Photo, dates, dedication, and quiet remembrances on the days that matter.',
+  },
+  {
+    id: 'family',
+    name: 'Family Altar',
+    monthly: 19,
+    yearly: 189,
+    description:
+      'A family altar of your own. Up to seven loved ones, each with their own candle, photo, and remembrances — all tended together.',
+  },
+];
+
+export default function LightACandlePage() {
+  const router = useRouter();
+  const [step, setStep] = useState(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [billingInterval, setBillingInterval] = useState('monthly');
+
+  // form state
+  const [lovedOneName, setLovedOneName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [deathDate, setDeathDate] = useState('');
+  const [dedication, setDedication] = useState('');
+  const [tier, setTier] = useState('memorial');
+  const [customerName, setCustomerName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  function next() {
+    setErrorMsg('');
+    if (step === 1 && !lovedOneName.trim()) {
+      setErrorMsg('Please tell us their name.');
+      return;
+    }
+    if (step < 4) setStep(step + 1);
+  }
+  function back() {
+    setErrorMsg('');
+    if (step > 1) setStep(step - 1);
+  }
+
+  async function handleSubmit() {
+    setErrorMsg('');
+    if (!customerName.trim()) {
+      setErrorMsg('Please tell us your name.');
+      return;
+    }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+    if (!password || password.length < 8) {
+      setErrorMsg('Password must be at least 8 characters.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/light-a-candle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lovedOneName: lovedOneName.trim(),
+          birthDate: birthDate || null,
+          deathDate: deathDate || null,
+          dedication: dedication.trim() || null,
+          tier,
+          customerName: customerName.trim(),
+          email: email.trim(),
+          password,
+        }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.hash) {
+        router.push(`/light-a-candle/success/${data.hash}`);
+      } else {
+        setErrorMsg(data.error || 'Something went wrong. Please try again.');
+        setSubmitting(false);
+      }
+    } catch (err) {
+      setErrorMsg('Something went wrong. Please try again.');
+      setSubmitting(false);
+    }
+  }
+
+  const selectedTier = TIERS.find((t) => t.id === tier);
+  const price = billingInterval === 'monthly' ? selectedTier.monthly : selectedTier.yearly;
+  const period = billingInterval === 'monthly' ? '/ MONTH' : '/ YEAR';
+
+  return (
+    <>
+      <header className="site-header">
+        <Link href="/" className="brand-logo-link" aria-label="Home">
+          <div className="brand-logo">
+            <img src="/logo-original-botanica.svg" alt="Original Botanica" />
+            <div className="tag">Ancestor Altar</div>
+          </div>
+        </Link>
+      </header>
+
+      <main className="wizard-main">
+        <div className="wizard">
+          <div className="wizard-progress" aria-label={`Step ${step} of 4`}>
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} className={`dot ${n <= step ? 'active' : ''}`} />
+            ))}
+          </div>
+
+          {step === 1 && (
+            <>
+              <h2>Who are you remembering?</h2>
+              <p className="wizard-sub">This is the name that will appear beneath their candle.</p>
+              <label htmlFor="lovedOneName">Their full name</label>
+              <input
+                id="lovedOneName"
+                type="text"
+                placeholder="e.g., Maria Elena Reyes"
+                value={lovedOneName}
+                onChange={(e) => setLovedOneName(e.target.value)}
+                autoFocus
+              />
+              <label htmlFor="birthDate">
+                Birthday <span className="optional">(optional)</span>
+              </label>
+              <input
+                id="birthDate"
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+              />
+              <label htmlFor="deathDate">
+                Date of passing <span className="optional">(optional)</span>
+              </label>
+              <input
+                id="deathDate"
+                type="date"
+                value={deathDate}
+                onChange={(e) => setDeathDate(e.target.value)}
+              />
+            </>
+          )}
+
+          {step === 2 && (
+            <>
+              <h2>Add a photo and a few words</h2>
+              <p className="wizard-sub">Both are optional. Both can be added or changed later.</p>
+
+              <label>A photo of them</label>
+              <div className="photo-upload-disabled" title="Photo upload coming in a future update">
+                <span>Photo upload coming soon</span>
+                <small>You will be able to add a photo from your account once we ship the upload feature.</small>
+              </div>
+
+              <label htmlFor="dedication">A dedication, prayer, or memory</label>
+              <textarea
+                id="dedication"
+                placeholder="Anything you'd like to share. A line they used to say, a memory, a blessing — whatever feels right."
+                value={dedication}
+                onChange={(e) => setDedication(e.target.value)}
+                rows={5}
+              />
+            </>
+          )}
+
+          {step === 3 && (
+            <>
+              <h2>Choose your remembrance</h2>
+              <p className="wizard-sub">You can change or cancel anytime.</p>
+
+              <div className="tier-toggle">
+                <button
+                  type="button"
+                  className={billingInterval === 'monthly' ? 'active' : ''}
+                  onClick={() => setBillingInterval('monthly')}
+                >
+                  Monthly
+                </button>
+                <button
+                  type="button"
+                  className={billingInterval === 'yearly' ? 'active' : ''}
+                  onClick={() => setBillingInterval('yearly')}
+                >
+                  Yearly · Save 18%
+                </button>
+              </div>
+
+              <div className="tiers">
+                {TIERS.map((t) => (
+                  <button
+                    key={t.id}
+                    type="button"
+                    className={`tier ${tier === t.id ? 'selected' : ''}`}
+                    onClick={() => setTier(t.id)}
+                  >
+                    <div className="tier-name">{t.name}</div>
+                    <div className="tier-price">
+                      <span>${billingInterval === 'monthly' ? t.monthly : t.yearly}</span>
+                      <small> {billingInterval === 'monthly' ? '/ MONTH' : '/ YEAR'}</small>
+                    </div>
+                    <div className="tier-desc">{t.description}</div>
+                  </button>
+                ))}
+              </div>
+
+              <p className="wizard-note">
+                Billing is not yet active during this preview. We are placing your candle on the altar at no charge while we finish setting up payments. We will reach out before the first charge ever occurs.
+              </p>
+            </>
+          )}
+
+          {step === 4 && (
+            <>
+              <h2>Create your account</h2>
+              <p className="wizard-sub">So you can return anytime to visit, edit, or share their candle.</p>
+
+              <label htmlFor="customerName">Your name</label>
+              <input
+                id="customerName"
+                type="text"
+                placeholder="e.g., Jason Reyes"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                autoFocus
+              />
+
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="At least 8 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+
+              <p className="wizard-note">
+                Selected: <strong>{selectedTier.name}</strong> · ${price} {period.toLowerCase()}.
+                You will not be charged today — billing comes in a future update.
+              </p>
+            </>
+          )}
+
+          {errorMsg && <p className="wizard-error">{errorMsg}</p>}
+
+          <div className="wizard-nav">
+            {step > 1 ? (
+              <button type="button" className="btn-secondary" onClick={back} disabled={submitting}>
+                Back
+              </button>
+            ) : (
+              <span />
+            )}
+            {step < 4 ? (
+              <button type="button" className="btn-cta" onClick={next}>
+                Continue
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn-cta"
+                onClick={handleSubmit}
+                disabled={submitting}
+              >
+                {submitting ? 'Lighting the candle…' : 'Light the Candle'}
+              </button>
+            )}
+          </div>
+        </div>
+      </main>
+
+      <footer className="site-footer">
+        <p>Original Botanica &nbsp;·&nbsp; The Bronx, NY &nbsp;·&nbsp; Family-owned since 1959</p>
+        <div className="links">
+          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;·&nbsp;{' '}
+          <a href="https://altar.originalbotanica.com">altar.originalbotanica.com</a>
+        </div>
+      </footer>
+    </>
+  );
+}
