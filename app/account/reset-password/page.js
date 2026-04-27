@@ -13,18 +13,37 @@ export default function ResetPasswordPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [ready, setReady] = useState(false);
 
-  // Supabase's reset email lands the user here with a recovery token in the URL hash.
-  // The browser client picks it up automatically and emits PASSWORD_RECOVERY.
-  // We wait for that (or for an existing session) before letting them set a new password.
+  // Supabase's reset email may land the user here in any of three ways:
+  //   1. Modern PKCE flow with ?code=... → we exchange the code for a session
+  //   2. Through /auth/callback which already exchanged the code → session cookie present
+  //   3. Legacy hash-based flow with #access_token=... → browser client auto-handles it
+  // Whichever path got us here, once a session exists we let them set a new password.
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
 
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
         setReady(true);
       }
     });
 
+    // Path 1: ?code=... is in the URL → exchange it
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+        if (error) {
+          setErrorMsg('This reset link has expired or already been used. Please request a new one.');
+        } else {
+          setReady(true);
+          // Strip the code from the URL so refreshing the page doesn't re-exchange.
+          window.history.replaceState({}, '', '/account/reset-password');
+        }
+      });
+      return () => sub.subscription.unsubscribe();
+    }
+
+    // Paths 2 & 3: just check if we already have a session
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) setReady(true);
     });

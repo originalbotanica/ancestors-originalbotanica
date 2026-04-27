@@ -17,10 +17,13 @@ export default function ForgotPasswordPage() {
 
     const supabase = createSupabaseBrowserClient();
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    // Supabase emits a PKCE-coded link. We bounce it through /auth/callback,
+    // which exchanges the code for a session cookie and then forwards the user
+    // to /account/reset-password where they can set a new password.
     const { error } = await supabase.auth.resetPasswordForEmail(
       email.trim().toLowerCase(),
       {
-        redirectTo: `${origin}/account/reset-password`,
+        redirectTo: `${origin}/auth/callback?next=/account/reset-password`,
       }
     );
 
