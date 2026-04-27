@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 const TIERS = [
@@ -25,10 +25,18 @@ const TIERS = [
 
 export default function LightACandlePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [billingInterval, setBillingInterval] = useState('monthly');
+
+  // If Stripe redirected the user back to /light-a-candle?canceled=1, show a friendly note.
+  useEffect(() => {
+    if (searchParams.get('canceled') === '1') {
+      setErrorMsg('Checkout was cancelled. Your candle is waiting — try again whenever you are ready.');
+    }
+  }, [searchParams]);
 
   // form state
   const [lovedOneName, setLovedOneName] = useState('');
@@ -79,6 +87,7 @@ export default function LightACandlePage() {
           deathDate: deathDate || null,
           dedication: dedication.trim() || null,
           tier,
+          billingInterval,
           customerName: customerName.trim(),
           email: email.trim(),
           password,
@@ -86,8 +95,9 @@ export default function LightACandlePage() {
       });
       const data = await res.json();
 
-      if (res.ok && data.hash) {
-        router.push(`/light-a-candle/success/${data.hash}`);
+      if (res.ok && data.checkoutUrl) {
+        // Hand off to Stripe Checkout. After payment, Stripe redirects to /light-a-candle/success/<hash>
+        window.location.href = data.checkoutUrl;
       } else {
         setErrorMsg(data.error || 'Something went wrong. Please try again.');
         setSubmitting(false);
@@ -218,7 +228,7 @@ export default function LightACandlePage() {
               </div>
 
               <p className="wizard-note">
-                Billing is not yet active during this preview. We are placing your candle on the altar at no charge while we finish setting up payments. We will reach out before the first charge ever occurs.
+                After step 4, you&rsquo;ll be sent to Stripe&rsquo;s secure checkout to enter your payment details. You can change tier or cancel anytime from your account.
               </p>
             </>
           )}
@@ -258,7 +268,7 @@ export default function LightACandlePage() {
 
               <p className="wizard-note">
                 Selected: <strong>{selectedTier.name}</strong> · ${price} {period.toLowerCase()}.
-                You will not be charged today — billing comes in a future update.
+                When you click below, you&rsquo;ll be sent to a secure Stripe checkout page to enter your payment details.
               </p>
             </>
           )}

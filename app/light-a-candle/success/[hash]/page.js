@@ -4,8 +4,13 @@ import { supabasePublic } from '@/lib/supabase';
 
 export const revalidate = 0; // always fresh
 
+// We query through the admin client here so we can still find the memorial
+// during the brief window between Stripe Checkout completing and our webhook
+// flipping the memorial from 'pending' to 'active'. The success page is only
+// reached via Stripe's redirect after a real payment.
 async function getMemorial(hash) {
-  const { data } = await supabasePublic
+  const { supabaseAdmin } = await import('@/lib/supabase');
+  const { data } = await supabaseAdmin
     .from('memorials')
     .select('hash, name, status')
     .eq('hash', hash)

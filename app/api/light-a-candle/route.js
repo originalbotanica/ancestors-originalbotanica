@@ -1,19 +1,24 @@
 import { NextResponse } from 'next/server';
 import { randomBytes } from 'crypto';
 import { supabaseAdmin } from '@/lib/supabase';
+import { stripe, priceIdFor, tierLabel } from '@/lib/stripe';
 
-// Generate a short, URL-friendly hash for memorial URLs.
-// Result: 'c' + 9 alphanumeric characters (e.g., 'cA7b3K9m2x') ~ 53 bits of entropy.
+// Generate a short URL-friendly hash for memorial URLs.
 function makeHash() {
   const raw = randomBytes(8).toString('base64url').replace(/[-_]/g, '');
   return 'c' + raw.slice(0, 9);
 }
 
 const VALID_TIERS = new Set(['memorial', 'family']);
+const VALID_INTERVALS = new Set(['monthly', 'yearly']);
 
 // POST /api/light-a-candle
-// Creates a Supabase auth user + a memorial owned by that user.
-// Returns the new memorial's hash so the client can redirect to /light-a-candle/success/<hash>.
+//   1. Creates the Supabase auth user.
+//   2. Creates a 'pending' memorial owned by that user.
+//   3. Creates a Stripe Checkout session for the chosen tier + interval.
+//   4. Returns the Checkout URL — client redirects there.
+//
+// After successful payment, our /api/stripe/webhook flips the memorial to 'active'.
 export async function POST(request) {
   try {
     const body = await request.json().catch(() => ({}));
@@ -23,6 +28,9 @@ export async function POST(request) {
     const deathDate = (body.deathDate || '').toString().trim() || null;
     const dedication = (body.dedication || '').toString().trim() || null;
     const tier = VALID_TIERS.has(body.tier) ? body.tier : 'memorial';
+    const billingInterval = VALID_INTERVALS.has(body.billingInterval)
+      ? body.billingInterval
+      : 'monthly';
     const customerName = (body.customerName || '').toString().trim();
     const email = (body.email || '').toString().trim().toLowerCase();
     const password = (body.password || '').toString();
@@ -35,16 +43,10 @@ export async function POST(request) {
       );
     }
     if (!customerName) {
-      return NextResponse.json(
-        { error: 'Please tell us your name.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Please tell us your name.' }, { status: 400 });
     }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json(
-        { error: 'Please enter a valid email address.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 });
     }
     if (!password || password.length < 8) {
       return NextResponse.json(
@@ -53,18 +55,30 @@ export async function POST(request) {
       );
     }
 
-    // Step 1: Create the Supabase auth user (auto-confirmed for now — we'll add
-    // email verification in a later phase).
+    // Look up the Stripe price for the chosen tier + interval.
+    const priceId = priceIdFor(tier, billingInterval);
+    if (!priceId) {
+      console.error(`Missing Stripe price ID for tier=${tier} interval=${billingInterval}`);
+      return NextResponse.json(
+        { error: 'This plan is not available right now. Please try again or contact us.' },
+        { status: 500 }
+      );
+    }
+
+    // 1) Create the Supabase auth user. Auto-confirmed (email verification comes later).
     const { data: userData, error: userError } =
       await supabaseAdmin.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
-        user_metadata: { full_name: customerName },
+        user_metadata: {
+          full_name: customerName,
+          intended_tier: tier,
+          intended_billing: billingInterval,
+        },
       });
 
     if (userError) {
-      // Email already in use → friendly error
       if (
         userError.message?.toLowerCase().includes('already') ||
         userError.code === 'email_exists' ||
@@ -88,13 +102,13 @@ export async function POST(request) {
     const ownerId = userData.user?.id;
     if (!ownerId) {
       return NextResponse.json(
-        { error: 'Account creation succeeded but did not return a user ID. Please try again.' },
+        { error: 'Account creation succeeded but did not return a user ID.' },
         { status: 500 }
       );
     }
 
-    // Step 2: Insert the memorial. Try a few times in the (very unlikely) case
-    // of a hash collision with an existing memorial.
+    // 2) Insert a 'pending' memorial. It won't show on /altar until the
+    // webhook marks it 'active' after successful payment.
     let memorialHash = null;
     let lastError = null;
     for (let attempt = 0; attempt < 5; attempt++) {
@@ -105,7 +119,7 @@ export async function POST(request) {
         birth_date: birthDate,
         death_date: deathDate,
         dedication,
-        status: 'active',
+        status: 'pending',
         owner_id: ownerId,
       });
       if (!error) {
@@ -113,13 +127,11 @@ export async function POST(request) {
         break;
       }
       lastError = error;
-      // 23505 = unique constraint violation (hash collision)
       if (error.code !== '23505') break;
     }
 
     if (!memorialHash) {
       console.error('Memorial insert failed:', lastError);
-      // Best-effort cleanup of the auth user we just created
       try {
         await supabaseAdmin.auth.admin.deleteUser(ownerId);
       } catch (cleanupErr) {
@@ -131,22 +143,80 @@ export async function POST(request) {
       );
     }
 
-    // Step 3: Record the tier choice as user metadata for now (Phase 4 will
-    // hand this off to Stripe and replace this with a real subscription record).
+    // 3) Create the Stripe customer and Checkout session.
+    const origin =
+      request.headers.get('origin') ||
+      `https://${request.headers.get('host')}` ||
+      'https://ancestors-originalbotanica.vercel.app';
+
+    let customer;
+    try {
+      customer = await stripe.customers.create({
+        email,
+        name: customerName,
+        metadata: {
+          supabase_user_id: ownerId,
+          memorial_hash: memorialHash,
+          source: 'ancestors',
+        },
+      });
+    } catch (e) {
+      console.error('Stripe customer create error:', e);
+      return NextResponse.json(
+        { error: 'Could not start checkout. Please try again.' },
+        { status: 500 }
+      );
+    }
+
+    // Save the Stripe customer ID to the user's metadata for future reference.
     try {
       await supabaseAdmin.auth.admin.updateUserById(ownerId, {
         user_metadata: {
           full_name: customerName,
           intended_tier: tier,
-          intended_billing: 'pending', // updated after Stripe checkout in Phase 4
+          intended_billing: billingInterval,
+          stripe_customer_id: customer.id,
         },
       });
     } catch (e) {
-      // Non-fatal; the memorial is already placed.
       console.error('User metadata update error (non-fatal):', e);
     }
 
-    return NextResponse.json({ ok: true, hash: memorialHash });
+    let session;
+    try {
+      session = await stripe.checkout.sessions.create({
+        mode: 'subscription',
+        customer: customer.id,
+        line_items: [{ price: priceId, quantity: 1 }],
+        success_url: `${origin}/light-a-candle/success/${memorialHash}?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/light-a-candle?canceled=1`,
+        allow_promotion_codes: true,
+        billing_address_collection: 'auto',
+        subscription_data: {
+          metadata: {
+            supabase_user_id: ownerId,
+            memorial_hash: memorialHash,
+            tier,
+            billing_interval: billingInterval,
+            product_label: tierLabel(tier),
+          },
+        },
+        metadata: {
+          supabase_user_id: ownerId,
+          memorial_hash: memorialHash,
+          tier,
+          billing_interval: billingInterval,
+        },
+      });
+    } catch (e) {
+      console.error('Stripe checkout session create error:', e);
+      return NextResponse.json(
+        { error: 'Could not start checkout. Please try again.' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ ok: true, hash: memorialHash, checkoutUrl: session.url });
   } catch (err) {
     console.error('Light-a-candle handler error:', err);
     return NextResponse.json(
