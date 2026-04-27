@@ -56,23 +56,40 @@ export async function POST(request) {
         const sub = event.data.object;
         await upsertSubscription(sub);
 
-        // Mirror subscription status onto the memorial:
-        // active   → memorial active
-        // past_due → memorial active (Stripe handles dunning emails)
-        // paused   → memorial paused (dim on the altar)
-        // anything else → memorial archived
+        // Mirror subscription status onto the memorial — but only for clear
+        // end-states. Intermediate states like 'incomplete' fire transiently
+        // during Checkout (before the first payment lands) and would race
+        // with the 'active' status that checkout.session.completed just set.
+        // We leave the memorial alone for those.
+        //
+        //   paused                                         → paused
+        //   canceled / unpaid / incomplete_expired         → archived
+        //   active / trialing / past_due                   → active
+        //   anything else (incl. 'incomplete')             → no change
         const memorialHash = sub.metadata?.memorial_hash;
         if (memorialHash) {
-          let memorialStatus = 'archived';
-          if (sub.status === 'active' || sub.status === 'trialing' || sub.status === 'past_due') {
-            memorialStatus = 'active';
-          } else if (sub.pause_collection) {
+          let memorialStatus = null;
+          if (sub.pause_collection) {
             memorialStatus = 'paused';
+          } else if (
+            sub.status === 'canceled' ||
+            sub.status === 'unpaid' ||
+            sub.status === 'incomplete_expired'
+          ) {
+            memorialStatus = 'archived';
+          } else if (
+            sub.status === 'active' ||
+            sub.status === 'trialing' ||
+            sub.status === 'past_due'
+          ) {
+            memorialStatus = 'active';
           }
-          await supabaseAdmin
-            .from('memorials')
-            .update({ status: memorialStatus })
-            .eq('hash', memorialHash);
+          if (memorialStatus) {
+            await supabaseAdmin
+              .from('memorials')
+              .update({ status: memorialStatus })
+              .eq('hash', memorialHash);
+          }
         }
         break;
       }
