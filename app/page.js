@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -94,6 +95,10 @@ export default function Home() {
               {message}
             </p>
           </form>
+
+          <p className="altar-link">
+            <Link href="/altar">Visit the altar &rarr;</Link>
+          </p>
         </div>
       </main>
 
