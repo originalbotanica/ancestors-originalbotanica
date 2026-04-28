@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { supabasePublic } from '@/lib/supabase';
+import { supabasePublic } from '@/lib/supabase';import SiteFooter from '../components/SiteFooter';
+
 
 export const metadata = {
   title: 'The Altar — Ancestors · Original Botanica',
@@ -97,13 +98,7 @@ export default async function AltarPage() {
         </div>
       </main>
 
-      <footer className="site-footer">
-        <p>Original Botanica &nbsp;·&nbsp; The Bronx, NY &nbsp;·&nbsp; Family-owned since 1959</p>
-        <div className="links">
-          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;·&nbsp;{' '}
-          <a href="https://altar.originalbotanica.com">altar.originalbotanica.com</a>
-        </div>
-      </footer>
+            <SiteFooter />
     </>
   );
 }
