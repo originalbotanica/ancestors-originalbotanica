@@ -19,7 +19,7 @@ const TIERS = [
     monthly: '19.95',
     yearly: '189.95',
     description:
-      'A family altar of your own. Up to seven loved ones, each with their own candle, photo, and remembrances â all tended together.',
+      'A family altar of your own. Up to seven loved ones, each with their own candle, photo, and remembrances — all tended together.',
   },
 ];
 
@@ -36,7 +36,7 @@ export default function LightACandlePage() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('canceled') === '1') {
-        setErrorMsg('Checkout was cancelled. Your candle is waiting â try again whenever you are ready.');
+        setErrorMsg('Checkout was cancelled. Your candle is waiting — try again whenever you are ready.');
       }
     }
   }, []);
@@ -50,6 +50,34 @@ export default function LightACandlePage() {
   const [customerName, setCustomerName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // photo state — file is held in memory and uploaded after memorial creation
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+
+  function handlePhotoPick(e) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+      setErrorMsg('Photos must be JPG, PNG, or WebP.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMsg('Photos must be under 5 MB.');
+      return;
+    }
+    setErrorMsg('');
+    setPhotoFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  }
+
+  function handlePhotoRemove() {
+    setPhotoFile(null);
+    if (photoPreview) URL.revokeObjectURL(photoPreview);
+    setPhotoPreview(null);
+  }
 
   function next() {
     setErrorMsg('');
@@ -99,6 +127,18 @@ export default function LightACandlePage() {
       const data = await res.json();
 
       if (res.ok && data.checkoutUrl) {
+        // If the user selected a photo, upload it now (before redirecting to Stripe).
+        // This is best-effort — a failure here doesn't block checkout.
+        if (photoFile && data.hash) {
+          try {
+            const fd = new FormData();
+            fd.append('hash', data.hash);
+            fd.append('file', photoFile);
+            await fetch('/api/upload-memorial-photo', { method: 'POST', body: fd });
+          } catch {
+            // Non-fatal — user can add from account later.
+          }
+        }
         // Hand off to Stripe Checkout. After payment, Stripe redirects to /light-a-candle/success/<hash>
         window.location.href = data.checkoutUrl;
       } else {
@@ -173,16 +213,31 @@ export default function LightACandlePage() {
               <h2>Add a photo and a few words</h2>
               <p className="wizard-sub">Both are optional. Both can be added or changed later.</p>
 
-              <label>A photo of them</label>
-              <div className="photo-upload-disabled" title="Photo upload coming in a future update">
-                <span>Photo upload coming soon</span>
-                <small>You will be able to add a photo from your account once we ship the upload feature.</small>
-              </div>
+              <label>A photo of them <span className="optional">(optional)</span></label>
+              {photoPreview ? (
+                <div className="photo-preview-wrap">
+                  <img src={photoPreview} alt="Preview" className="photo-preview-img" />
+                  <button type="button" className="photo-remove-btn" onClick={handlePhotoRemove}>
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <label className="photo-pick-label">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handlePhotoPick}
+                    className="photo-file-input"
+                  />
+                  <span>Choose a photo</span>
+                  <small>JPG, PNG, or WebP · up to 5 MB</small>
+                </label>
+              )}
 
               <label htmlFor="dedication">A dedication, prayer, or memory</label>
               <textarea
                 id="dedication"
-                placeholder="Anything you'd like to share. A line they used to say, a memory, a blessing â whatever feels right."
+                placeholder="Anything you'd like to share. A line they used to say, a memory, a blessing — whatever feels right."
                 value={dedication}
                 onChange={(e) => setDedication(e.target.value)}
                 rows={5}
@@ -208,7 +263,7 @@ export default function LightACandlePage() {
                   className={billingInterval === 'yearly' ? 'active' : ''}
                   onClick={() => setBillingInterval('yearly')}
                 >
-                  Yearly Â· Save 25%
+                  Yearly · Save 25%
                 </button>
               </div>
 
@@ -222,7 +277,7 @@ export default function LightACandlePage() {
                   >
                     <div className="tier-name">{t.name}</div>
                     <div className="tier-price">
-                      <span>${billingInterval === 'monthly' ? t.monthly : t.yearly}</span>
+                      <span>{`$${billingInterval === 'monthly' ? t.monthly : t.yearly}`}</span>
                       <small> {billingInterval === 'monthly' ? '/ MONTH' : '/ YEAR'}</small>
                     </div>
                     <div className="tier-desc">{t.description}</div>
@@ -231,7 +286,7 @@ export default function LightACandlePage() {
               </div>
 
               <p className="wizard-note">
-                After step 4, you&rsquo;lb be sent to Stripe&rsquo;s secure checkout to enter your payment details. You can change tier or cancel anytime from your account.
+                After step 4, you&rsquo;ll be sent to Stripe&rsquo;s secure checkout to enter your payment details. You can change tier or cancel anytime from your account.
               </p>
             </>
           )}
@@ -270,7 +325,7 @@ export default function LightACandlePage() {
               />
 
               <p className="wizard-note">
-                Selected: <strong>{selectedTier.name}</strong> Â· ${price} {period.toLowerCase()}.
+                Selected: <strong>{selectedTier.name}</strong> · ${price} {period.toLowerCase()}.
                 When you click below, you&rsquo;ll be sent to a secure Stripe checkout page to enter your payment details.
               </p>
             </>
@@ -297,7 +352,7 @@ export default function LightACandlePage() {
                 onClick={handleSubmit}
                 disabled={submitting}
               >
-                {submitting ? 'Lighting the candleâ¦' : 'Light the Candle'}
+                {submitting ? 'Lighting the candle…' : 'Light the Candle'}
               </button>
             )}
           </div>
@@ -305,9 +360,9 @@ export default function LightACandlePage() {
       </main>
 
       <footer className="site-footer">
-        <p>Original Botanica &nbsp;Â·&nbsp; The Bronx, NY &nbsp;Â·&nbsp; Family-owned since 1959</p>
+        <p>Original Botanica &nbsp;·&nbsp; The Bronx, NY &nbsp;·&nbsp; Family-owned since 1959</p>
         <div className="links">
-          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;Â·&nbsp;{' '}
+          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;·&nbsp;{' '}
           <a href="https://altar.originalbotanica.com">altar.originalbotanica.com</a>
         </div>
       </footer>
