@@ -898,14 +898,16 @@ a:hover { color: var(--amber-warm); }
   font-size: 0.92rem !important;
   padding: 0.6rem 1.5rem !important;
   letter-spacing: 0.12em;
-    border: 1.5px solid var(--ink) !important;
+    border: 1.5px solid var(--amber) !important;
     border-radius: 999px;
-    background: transparent !important;
+    background: var(--amber) !important;
+    color: #1a0f00 !important;
     box-shadow: none !important;
 }
 .lp-nav-cta:hover {
-    border-color: var(--amber) !important;
-    color: var(--amber) !important;
+    background: var(--amber-warm) !important;
+    border-color: var(--amber-warm) !important;
+    color: #1a0f00 !important;
 }
 
 .lp-nav-account {
