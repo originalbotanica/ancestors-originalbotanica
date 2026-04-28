@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { createSupabaseServerClient } from '@/lib/auth-server';
 
 export const dynamic = 'force-dynamic';
@@ -87,6 +88,13 @@ export async function PATCH(request, { params }) {
       { status: 404 }
     );
   }
+
+  // Bust the Next.js cache for any page that renders this memorial so the
+  // edits show up immediately when the user clicks "Visit candle" or visits
+  // /altar instead of waiting for the 60s revalidate window.
+  revalidatePath(`/candle/${hash}`);
+  revalidatePath('/altar');
+  revalidatePath('/account');
 
   return NextResponse.json({ ok: true, memorial: data });
 }
