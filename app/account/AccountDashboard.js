@@ -12,10 +12,26 @@ const STATUS_LABELS = {
   archived: { label: 'Archived', className: 'status-archived' },
 };
 
+// Plan display helpers.
+const PLAN_NAMES = { memorial: 'Memorial Candle', family: 'Family Altar' };
+const PLAN_PRICES = {
+  memorial: { monthly: '$9.95 / month', yearly: '$89.95 / year' },
+  family: { monthly: '$19.95 / month', yearly: '$189.95 / year' },
+};
+
+function formatRenewalDate(isoString) {
+  if (!isoString) return null;
+  return new Date(isoString).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5 MB
 
-export default function AccountDashboard({ memorials, ownerId }) {
+export default function AccountDashboard({ memorials, ownerId, subscription }) {
   if (!memorials || memorials.length === 0) {
     return <EmptyState />;
   }
@@ -32,12 +48,12 @@ export default function AccountDashboard({ memorials, ownerId }) {
         ))}
       </div>
 
-      <ManageBilling />
+      <ManageBilling subscription={subscription} />
     </>
   );
 }
 
-function ManageBilling() {
+function ManageBilling({ subscription }) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -50,7 +66,6 @@ function ManageBilling() {
       if (!res.ok) {
         throw new Error(data.error || 'Could not open billing portal. Please try again.');
       }
-      // Redirect the browser to the Stripe Billing Portal.
       window.location.href = data.url;
     } catch (err) {
       setErrorMsg(err.message || 'Something went wrong. Please try again.');
@@ -58,12 +73,45 @@ function ManageBilling() {
     }
   }
 
+  const planName = subscription ? (PLAN_NAMES[subscription.tier] || subscription.tier) : null;
+  const planPrice = subscription
+    ? (PLAN_PRICES[subscription.tier]?.[subscription.billing_interval] || null)
+    : null;
+  const renewalDate = subscription ? formatRenewalDate(subscription.current_period_end) : null;
+  const cancelAtEnd = subscription?.cancel_at_period_end;
+  const isPaused = subscription?.paused;
+
   return (
     <div className="manage-billing">
       <h3 className="account-section-heading">Billing</h3>
-      <p className="account-section-sub">
-        Update your payment method, view past invoices, or manage your subscription.
-      </p>
+
+      {subscription ? (
+        <div className="plan-summary">
+          <div className="plan-summary-row">
+            <span className="plan-summary-name">{planName}</span>
+            {planPrice && <span className="plan-summary-price">{planPrice}</span>}
+          </div>
+          {isPaused && (
+            <p className="plan-summary-note">Your subscription is currently paused.</p>
+          )}
+          {!isPaused && cancelAtEnd && renewalDate && (
+            <p className="plan-summary-note plan-summary-note--warn">
+              Cancels on {renewalDate}. Your candle will remain lit until then.
+            </p>
+          )}
+          {!isPaused && !cancelAtEnd && renewalDate && (
+            <p className="plan-summary-note">Renews {renewalDate}.</p>
+          )}
+          <p className="plan-summary-hint">
+            To change your plan or billing cycle, use the billing portal below.
+          </p>
+        </div>
+      ) : (
+        <p className="account-section-sub">
+          Update your payment method, view past invoices, or manage your subscription.
+        </p>
+      )}
+
       {errorMsg && <p className="wizard-error">{errorMsg}</p>}
       <button
         type="button"
@@ -71,7 +119,7 @@ function ManageBilling() {
         onClick={handleManageBilling}
         disabled={loading}
       >
-        {loading ? 'Openingâ¦' : 'Manage billing'}
+        {loading ? 'Opening…' : 'Manage billing'}
       </button>
     </div>
   );
@@ -196,7 +244,7 @@ function MemorialCard({ memorial, ownerId }) {
     setErrorMsg('');
     setUploading(true);
     try {
-      // Best effort â clear the DB pointer first; the file in storage can be
+      // Best effort — clear the DB pointer first; the file in storage can be
       // garbage-collected later. We don't fail the user if the file delete
       // fails because the candle no longer references it anyway.
       await persistPatch({
@@ -284,7 +332,7 @@ function MemorialCard({ memorial, ownerId }) {
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
           >
-            {uploading ? 'Uploadingâ¦' : photoUrl ? 'Replace photo' : 'Add a photo'}
+            {uploading ? 'Uploading…' : photoUrl ? 'Replace photo' : 'Add a photo'}
           </button>
           {photoUrl && !uploading && (
             <button
@@ -295,7 +343,7 @@ function MemorialCard({ memorial, ownerId }) {
               Remove
             </button>
           )}
-          <p className="photo-hint">JPG, PNG, or WebP Â· up to 5 MB</p>
+          <p className="photo-hint">JPG, PNG, or WebP · up to 5 MB</p>
         </div>
       </div>
 
@@ -342,14 +390,14 @@ function MemorialCard({ memorial, ownerId }) {
           rows={4}
           value={dedication}
           onChange={(e) => setDedication(e.target.value)}
-          placeholder="A line they used to say, a memory, a blessing â whatever feels right."
+          placeholder="A line they used to say, a memory, a blessing — whatever feels right."
         />
 
         {errorMsg && <p className="wizard-error">{errorMsg}</p>}
 
         {savedAt && !errorMsg && (
           <div className="memorial-card-saved-banner" role="status">
-            <span className="check" aria-hidden="true">â</span>
+            <span className="check" aria-hidden="true">✓</span>
             <span>Changes saved.</span>
           </div>
         )}
@@ -360,7 +408,7 @@ function MemorialCard({ memorial, ownerId }) {
             className="btn-cta"
             disabled={submitting || !dirty}
           >
-            {submitting ? 'Savingâ¦' : 'Save changes'}
+            {submitting ? 'Saving…' : 'Save changes'}
           </button>
         </div>
       </form>
