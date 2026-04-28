@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabasePublic } from '@/lib/supabase';
+import SiteFooter from '../../components/SiteFooter';
 
 export const revalidate = 60;
 
@@ -67,16 +68,26 @@ export default async function CandlePage({ params }) {
       </header>
 
       <main className="memorial-page">
-        {memorial.photo_url ? (
-          <div className="memorial-photo-circle has-photo">
-            <img src={memorial.photo_url} alt={memorial.name} />
-          </div>
-        ) : (
+                {!memorial.photo_url && (
           <div className="memorial-photo-circle" aria-hidden="true">{initial}</div>
         )}
 
         <div className="memorial-page-flame">
-          <img src="/white-candle.png" alt="A candle burning in memorial" />
+          <div className="candle-wrapper is-lit">
+            <div className="flame-overlay">
+              <div className="flame-halo"></div>
+              <div className="flame-outer"></div>
+              <div className="flame-mid"></div>
+              <div className="flame-inner"></div>
+              <div className="flame-tip"></div>
+              <div className="flame-blue"></div>
+              <div className="flame-light-cast"></div>
+            </div>
+            {memorial.photo_url && (
+              <img className="candle-photo-overlay" src={memorial.photo_url} alt={memorial.name} />
+            )}
+            <img src="/white-candle.png" alt="A candle burning in memorial" />
+          </div>
         </div>
 
         <h1 className="memorial-page-name">{memorial.name}</h1>
@@ -93,13 +104,7 @@ export default async function CandlePage({ params }) {
         </div>
       </main>
 
-      <footer className="site-footer">
-        <p>Original Botanica &nbsp;·&nbsp; The Bronx, NY &nbsp;·&nbsp; Family-owned since 1959</p>
-        <div className="links">
-          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;·&nbsp;{' '}
-          <a href="https://altar.originalbotanica.com">altar.originalbotanica.com</a>
-        </div>
-      </footer>
+            <SiteFooter />
     </>
   );
 }
