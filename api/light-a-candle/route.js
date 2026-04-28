@@ -5,9 +5,7 @@ import { stripe, priceIdFor, tierLabel } from '@/lib/stripe';
 
 // Generate a short URL-friendly hash for memorial URLs.
 function makeHash() {
-  const raw = randomBytes(8).toString('base64url').replace(/[-_]/g, '');
-  return 'c' + raw.slice(0, 9);
-}
+  return 'c' + randomBytes(12).toString('hex').slice(0, 16);
 
 const VALID_TIERS = new Set(['memorial', 'family']);
 const VALID_INTERVALS = new Set(['monthly', 'yearly']);
@@ -23,10 +21,10 @@ export async function POST(request) {
   try {
     const body = await request.json().catch(() => ({}));
 
-    const lovedOneName = (body.lovedOneName || '').toString().trim();
+    const lovedOneName = (body.lovedOneName || '').toString().trim().slice(0, 200);
     const birthDate = (body.birthDate || '').toString().trim() || null;
     const deathDate = (body.deathDate || '').toString().trim() || null;
-    const dedication = (body.dedication || '').toString().trim() || null;
+    const dedication = (body.dedication || '').toString().trim().slice(0, 2000) || null;
     const tier = VALID_TIERS.has(body.tier) ? body.tier : 'memorial';
     const billingInterval = VALID_INTERVALS.has(body.billingInterval)
       ? body.billingInterval
@@ -79,19 +77,6 @@ export async function POST(request) {
       });
 
     if (userError) {
-      if (
-        userError.message?.toLowerCase().includes('already') ||
-        userError.code === 'email_exists' ||
-        userError.status === 422
-      ) {
-        return NextResponse.json(
-          {
-            error:
-              'An account with this email already exists. We will add a sign-in option soon — for now, please use a different email.',
-          },
-          { status: 409 }
-        );
-      }
       console.error('Auth createUser error:', userError);
       return NextResponse.json(
         { error: 'Could not create your account. Please try again.' },
