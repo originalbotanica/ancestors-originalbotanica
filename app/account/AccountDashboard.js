@@ -21,14 +21,58 @@ export default function AccountDashboard({ memorials, ownerId }) {
   }
 
   return (
-    <div className="account-memorials">
-      <h3 className="account-section-heading">Your altar</h3>
+    <>
+      <div className="account-memorials">
+        <h3 className="account-section-heading">Your altar</h3>
+        <p className="account-section-sub">
+          Edit a name, add a photo, refine a dedication. Changes save right to the candle.
+        </p>
+        {memorials.map((m) => (
+          <MemorialCard key={m.hash} memorial={m} ownerId={ownerId} />
+        ))}
+      </div>
+
+      <ManageBilling />
+    </>
+  );
+}
+
+function ManageBilling() {
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  async function handleManageBilling() {
+    setErrorMsg('');
+    setLoading(true);
+    try {
+      const res = await fetch('/api/stripe/portal', { method: 'POST' });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || 'Could not open billing portal. Please try again.');
+      }
+      // Redirect the browser to the Stripe Billing Portal.
+      window.location.href = data.url;
+    } catch (err) {
+      setErrorMsg(err.message || 'Something went wrong. Please try again.');
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="manage-billing">
+      <h3 className="account-section-heading">Billing</h3>
       <p className="account-section-sub">
-        Edit a name, add a photo, refine a dedication. Changes save right to the candle.
+        Update your payment method, view past invoices, or manage your subscription.
       </p>
-      {memorials.map((m) => (
-        <MemorialCard key={m.hash} memorial={m} ownerId={ownerId} />
-      ))}
+      {errorMsg && <p className="wizard-error">{errorMsg}</p>}
+      <button
+        type="button"
+        className="btn-secondary"
+        onClick={handleManageBilling}
+        disabled={loading}
+      >
+        {loading ? 'Openingâ¦' : 'Manage billing'}
+      </button>
     </div>
   );
 }
@@ -152,7 +196,7 @@ function MemorialCard({ memorial, ownerId }) {
     setErrorMsg('');
     setUploading(true);
     try {
-      // Best effort — clear the DB pointer first; the file in storage can be
+      // Best effort â clear the DB pointer first; the file in storage can be
       // garbage-collected later. We don't fail the user if the file delete
       // fails because the candle no longer references it anyway.
       await persistPatch({
@@ -240,7 +284,7 @@ function MemorialCard({ memorial, ownerId }) {
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
           >
-            {uploading ? 'Uploading…' : photoUrl ? 'Replace photo' : 'Add a photo'}
+            {uploading ? 'Uploadingâ¦' : photoUrl ? 'Replace photo' : 'Add a photo'}
           </button>
           {photoUrl && !uploading && (
             <button
@@ -251,7 +295,7 @@ function MemorialCard({ memorial, ownerId }) {
               Remove
             </button>
           )}
-          <p className="photo-hint">JPG, PNG, or WebP · up to 5 MB</p>
+          <p className="photo-hint">JPG, PNG, or WebP Â· up to 5 MB</p>
         </div>
       </div>
 
@@ -298,14 +342,14 @@ function MemorialCard({ memorial, ownerId }) {
           rows={4}
           value={dedication}
           onChange={(e) => setDedication(e.target.value)}
-          placeholder="A line they used to say, a memory, a blessing — whatever feels right."
+          placeholder="A line they used to say, a memory, a blessing â whatever feels right."
         />
 
         {errorMsg && <p className="wizard-error">{errorMsg}</p>}
 
         {savedAt && !errorMsg && (
           <div className="memorial-card-saved-banner" role="status">
-            <span className="check" aria-hidden="true">✓</span>
+            <span className="check" aria-hidden="true">â</span>
             <span>Changes saved.</span>
           </div>
         )}
@@ -316,7 +360,7 @@ function MemorialCard({ memorial, ownerId }) {
             className="btn-cta"
             disabled={submitting || !dirty}
           >
-            {submitting ? 'Saving…' : 'Save changes'}
+            {submitting ? 'Savingâ¦' : 'Save changes'}
           </button>
         </div>
       </form>
