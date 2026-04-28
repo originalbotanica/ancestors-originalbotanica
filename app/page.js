@@ -58,25 +58,21 @@ export default async function Home() {
             <img src="/white-candle.png" alt="A prayer candle" />
           </div>
           <div className="lp-hero-copy">
-            <div className="eyebrow">Original Botanica · The Bronx · Since 1959</div>
             <h1>
               A flame that never goes out
               <br />
               for those we never forget.
             </h1>
             <p className="lede">
-              Ancestors is a perpetual virtual altar where you can light a candle and keep
-              a memorial burning for someone you love — tended by the family behind
-              Original Botanica, the Bronx&rsquo;s most trusted spiritual home for over 65
-              years.
+              Ancestors offers a sacred space to honor and remember those who came before you. Rooted in decades of spiritual tradition and tended with care by Original Botanica, each flame becomes a prayer, a moment of connection, and a way to honor those who came before you. Because love does not end, it transforms, and this is how you keep that bond alive.
             </p>
             <div className="lp-hero-ctas">
               <Link href="/light-a-candle" className="btn-cta">
                 Light a Candle
               </Link>
-              <a href="#how-it-works" className="btn-ghost">
-                See how it works ↓
-              </a>
+              <Link href="/altar" className="btn-ghost">
+                Visit the Altar
+              </Link>
             </div>
           </div>
         </section>
