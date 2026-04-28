@@ -377,7 +377,7 @@ a:hover { color: var(--amber-warm); }
   text-align: left; padding: 1.4rem;
   background: var(--bg); color: inherit;
   border: 1px solid var(--line); border-radius: 4px;
-  cursor: pointer; transition: all .2s; font-family: inherit;
+  cursor: pointer; transition: all .2s;
 }
 .tier:hover { border-color: var(--gold-soft); }
 .tier.selected {
@@ -438,7 +438,7 @@ a:hover { color: var(--amber-warm); }
   box-shadow: 0 10px 28px rgba(241, 166, 69, 0.42);
 }
 
-/* ============ ACCOUNT DASHBOARD ============ */
+/* ============ ACOOUNT DASHBOARD ============ */
 .account-main {
   flex: 1; max-width: 720px; margin: 0 auto;
   padding: 1rem 1.5rem 4rem;
@@ -505,6 +505,7 @@ a:hover { color: var(--amber-warm); }
   font-size: 1.45rem; font-weight: 500;
   color: var(--ink); margin: 0;
 }
+
 .memorial-card-link {
   font-family: "brandon-grotesque", sans-serif;
   font-weight: 600; font-size: 0.72rem;
@@ -566,7 +567,7 @@ a:hover { color: var(--amber-warm); }
   .memorial-card-photo { flex-direction: column; align-items: flex-start; }
 }
 
-/* Photo on the candle page — replaces the initial circle when available */
+/* Photo on the candle page â replaces the initial circle when available */
 .memorial-photo-circle.has-photo {
   padding: 0; overflow: hidden; background: var(--bg);
 }
@@ -575,7 +576,7 @@ a:hover { color: var(--amber-warm); }
   border-radius: 50%;
 }
 
-/* Photo thumbnail on the altar — small avatar above the candle */
+/* Photo thumbnail on the altar â small avatar above the candle */
 .altar-candle-wrap { position: relative; }
 .altar-photo {
   position: absolute; top: -8px; left: 50%;
@@ -655,8 +656,15 @@ a:hover { color: var(--amber-warm); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+.manage-billing {
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+}
+
 .account-signout {
-  margin-top: 3rem; text-align: center;
+  margin-top: 2rem; text-align: center;
 }
 
 /* ============ AUTH PAGES (login, forgot password, reset password) ============ */
