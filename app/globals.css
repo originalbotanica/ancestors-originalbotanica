@@ -55,11 +55,11 @@ a:hover { color: var(--amber-warm); }
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   line-height: 1;
 }
-.brand-logo img { height: 80px; width: auto; display: block; }
+.brand-logo img { height: 96px; width: auto; display: block; }
 .brand-logo .tag {
   font-family: "brandon-grotesque", sans-serif;
   font-weight: 900; color: var(--rust);
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   margin-top: 4px;
@@ -485,7 +485,7 @@ a:hover { color: var(--amber-warm); }
 }
 .account-section-sub {
   font-family: 'Playfair Display', serif; font-style: italic;
-  font-size: 0.95rem; color: var(--muted);
+  font-size: 1.1rem; color: var(--muted);
   margin: 0 0 2rem;
 }
 
@@ -701,7 +701,7 @@ a:hover { color: var(--amber-warm); }
 .auth-footer {
   margin-top: 2rem; text-align: center;
   font-family: 'Playfair Display', serif; font-style: italic;
-  font-size: 0.95rem; color: var(--muted);
+  font-size: 1.1rem; color: var(--muted);
 }
 .auth-footer a { color: var(--amber); text-decoration: none; }
 .auth-footer a:hover { text-decoration: underline; }
@@ -837,7 +837,7 @@ a:hover { color: var(--amber-warm); }
 }
 .legal-content p,
 .legal-content li {
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   line-height: 1.75;
   color: var(--ink);
   margin-bottom: 0.75rem;
@@ -875,33 +875,40 @@ a:hover { color: var(--amber-warm); }
 .lp-header {
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 2rem;
+  padding: 1.5rem 2.5rem;
 }
 .lp-nav {
   display: flex;
   align-items: center;
-  gap: 1.75rem;
+  gap: 1.5rem;
 }
-.lp-nav > a:first-child {
+.lp-nav > a {
   font-size: 0.88rem;
-  color: var(--muted);
+  color: var(--ink);
   text-decoration: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: brandon-grotesque, sans-serif;
+  font-weight: 600;
   transition: color 0.2s;
 }
-.lp-nav > a:first-child:hover { color: var(--ink); }
+.lp-nav > a:hover { color: var(--amber); }
 .lp-nav-cta {
-  font-size: 0.82rem !important;
-  padding: 0.5rem 1.1rem !important;
+  font-size: 0.92rem !important;
+  padding: 0.6rem 1.5rem !important;
   letter-spacing: 0.12em;
+    border: 1.5px solid var(--ink) !important;
+    border-radius: 999px;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+.lp-nav-cta:hover {
+    border-color: var(--amber) !important;
+    color: var(--amber) !important;
 }
 
 .lp-nav-account {
-  font-size: 0.82rem;
-  color: var(--muted);
-  opacity: 0.75;
-  text-decoration: none;
-  transition: opacity 0.2s;
+
 }
 .lp-nav-account:hover {
   opacity: 1;
@@ -950,7 +957,7 @@ a:hover { color: var(--amber-warm); }
   margin-bottom: 0.5rem;
 }
 .lp-section-sub {
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   color: var(--muted);
   text-align: center;
   max-width: 560px;
@@ -1216,7 +1223,7 @@ a:hover { color: var(--amber-warm); }
   margin-bottom: 1rem;
 }
 .lp-story-copy p {
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   color: var(--muted);
   line-height: 1.8;
   margin-bottom: 1.75rem;
@@ -1275,7 +1282,7 @@ a:hover { color: var(--amber-warm); }
   color: var(--cream);
 }
 .lp-closing p {
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   color: var(--muted);
   margin-bottom: 0.25rem;
 }
@@ -1283,7 +1290,7 @@ a:hover { color: var(--amber-warm); }
 /* ── Responsive tweaks ──────────────────────────────── */
 @media (max-width: 720px) {
   .lp-header { padding: 1rem 1.25rem; }
-  .lp-nav > a:first-child { display: none; }
+  .lp-nav > a { display: none; }
   .lp-section { padding: 3.5rem 0; }
   .lp-hero { min-height: auto; padding: 3rem 1.25rem 4rem; }
   .lp-plan-cards { grid-template-columns: 1fr; max-width: 380px; }
