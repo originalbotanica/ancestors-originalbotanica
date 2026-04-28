@@ -750,3 +750,52 @@ a:hover { color: var(--amber-warm); }
 .site-footer a { color: var(--muted); text-decoration: none; }
 .site-footer a:hover { color: var(--amber); }
 .site-footer .links { margin-top: 0.6rem; }
+
+
+/* ── Photo picker (signup wizard step 2) ─────────────────────────────── */
+.photo-pick-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px dashed var(--amber);
+  border-radius: 4px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.15);
+  transition: background 0.2s;
+}
+.photo-pick-label:hover { background: rgba(209, 144, 59, 0.08); }
+.photo-pick-label span { font-size: 1rem; color: var(--amber); }
+.photo-pick-label small {
+  font-family: "brandon-grotesque", sans-serif;
+  font-style: normal;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.photo-file-input { display: none; }
+.photo-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+.photo-preview-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--amber);
+}
+.photo-remove-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+.photo-remove-btn:hover { color: var(--amber); }
