@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseServerClient } from '@/lib/auth-server';
+import AccountDashboard from './AccountDashboard';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,8 +9,6 @@ export const metadata = {
   title: 'My Account — Ancestors · Original Botanica',
 };
 
-// Phase 5a: just confirm auth works. Memorial editing, photo upload, billing,
-// and tier switching all land in 5b–5e.
 export default async function AccountPage() {
   const supabase = await createSupabaseServerClient();
   const {
@@ -18,7 +17,20 @@ export default async function AccountPage() {
 
   if (!user) redirect('/account/login');
 
+  // RLS gates this — the auth-aware client only returns memorials owned by the
+  // signed-in user. Seed candles (no owner_id) and other customers' memorials
+  // are filtered out at the database layer.
+  const { data: memorials, error } = await supabase
+    .from('memorials')
+    .select('hash, name, birth_date, death_date, dedication, status, created_at')
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('Account page memorials fetch error:', error);
+  }
+
   const fullName = user.user_metadata?.full_name || null;
+  const firstName = fullName ? fullName.split(' ')[0] : null;
 
   return (
     <>
@@ -31,23 +43,19 @@ export default async function AccountPage() {
         </Link>
       </header>
 
-      <main className="wizard-main">
-        <div className="wizard">
-          <h2>{fullName ? `Welcome back, ${fullName.split(' ')[0]}` : 'Welcome back'}</h2>
+      <main className="account-main">
+        <div className="account-header">
+          <h2>{firstName ? `Welcome back, ${firstName}` : 'Welcome back'}</h2>
           <p className="wizard-sub">Signed in as {user.email}</p>
-
-          <p className="wizard-note">
-            Your dashboard is being readied — you&rsquo;ll soon be able to edit your loved one&rsquo;s
-            details, upload a photo, and manage your subscription right from here.
-          </p>
-
-          <form action="/api/auth/logout" method="POST" className="wizard-nav">
-            <span />
-            <button type="submit" className="btn-secondary">
-              Sign out
-            </button>
-          </form>
         </div>
+
+        <AccountDashboard memorials={memorials || []} />
+
+        <form action="/api/auth/logout" method="POST" className="account-signout">
+          <button type="submit" className="btn-secondary">
+            Sign out
+          </button>
+        </form>
       </main>
 
       <footer className="site-footer">

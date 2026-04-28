@@ -122,19 +122,7 @@ export default function ResetPasswordPage() {
           <p className="wizard-sub">Choose a password you&rsquo;ll remember.</p>
 
           {!ready ? (
-            errorMsg ? (
-              <>
-                <p className="wizard-error">{errorMsg}</p>
-                <div className="wizard-nav">
-                  <span />
-                  <Link href="/account/forgot-password" className="btn-cta">
-                    Request a new link
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <p className="wizard-note">Verifying your reset link…</p>
-            )
+            <p className="wizard-note">Verifying your reset link…</p>
           ) : (
             <form onSubmit={handleSubmit}>
               <label htmlFor="password">New password</label>

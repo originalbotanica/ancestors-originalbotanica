@@ -436,6 +436,141 @@ a:hover { color: var(--amber-warm); }
   box-shadow: 0 10px 28px rgba(241, 166, 69, 0.42);
 }
 
+/* ============ ACCOUNT DASHBOARD ============ */
+.account-main {
+  flex: 1; max-width: 720px; margin: 0 auto;
+  padding: 1rem 1.5rem 4rem;
+}
+.account-header { text-align: center; margin-bottom: 2.5rem; }
+.account-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 500; color: var(--ink);
+  margin: 0 0 0.5rem; letter-spacing: -0.01em;
+}
+.account-header .wizard-sub {
+  font-size: 1rem; color: var(--muted);
+}
+
+.account-section-heading {
+  font-family: "brandon-grotesque", sans-serif;
+  font-weight: 600; font-size: 0.78rem;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--amber); margin: 0 0 0.25rem;
+}
+.account-section-sub {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 0.95rem; color: var(--muted);
+  margin: 0 0 2rem;
+}
+
+.account-empty {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.account-empty h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-weight: 500;
+  color: var(--ink); margin: 0 0 1rem;
+}
+.account-empty p {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  color: var(--muted); max-width: 460px;
+  margin: 0 auto 1.8rem; line-height: 1.6;
+}
+
+.memorial-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1.6rem 1.8rem;
+  margin-bottom: 1.5rem;
+}
+.memorial-card.is-archived { opacity: 0.55; }
+.memorial-card-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 1rem; margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+.memorial-card-title {
+  display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap;
+}
+.memorial-card-title h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.45rem; font-weight: 500;
+  color: var(--ink); margin: 0;
+}
+.memorial-card-link {
+  font-family: "brandon-grotesque", sans-serif;
+  font-weight: 600; font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--amber); text-decoration: none;
+  white-space: nowrap;
+}
+.memorial-card-link:hover { text-decoration: underline; }
+
+.status-pill {
+  font-family: "brandon-grotesque", sans-serif;
+  font-weight: 600; font-size: 0.65rem;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  padding: 0.2rem 0.55rem; border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.status-pending { color: var(--amber); }
+.status-paused { color: var(--muted); }
+.status-archived { color: var(--rust); }
+
+.memorial-card-form label {
+  display: block;
+  font-family: "brandon-grotesque", sans-serif;
+  font-weight: 600; font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--amber); margin: 1rem 0 0.4rem;
+}
+.memorial-card-form .optional {
+  color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0;
+  font-size: 0.78rem; margin-left: 0.4rem;
+}
+.memorial-card-form input,
+.memorial-card-form textarea {
+  width: 100%; box-sizing: border-box;
+  background: var(--bg);
+  border: 1px solid var(--line); border-radius: 3px;
+  padding: 0.7rem 0.9rem;
+  color: var(--ink);
+  font-family: 'Playfair Display', serif; font-size: 1rem;
+  transition: border-color .15s;
+}
+.memorial-card-form input:focus,
+.memorial-card-form textarea:focus {
+  outline: none; border-color: var(--amber);
+}
+.memorial-card-form textarea {
+  resize: vertical; min-height: 90px;
+  font-style: italic;
+}
+.memorial-card-dates {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+}
+@media (max-width: 540px) {
+  .memorial-card-dates { grid-template-columns: 1fr; gap: 0; }
+}
+.memorial-card-actions {
+  display: flex; align-items: center; justify-content: flex-end;
+  gap: 1rem; margin-top: 1.5rem;
+}
+.memorial-card-saved {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 0.92rem; color: var(--amber);
+}
+
+.account-signout {
+  margin-top: 3rem; text-align: center;
+}
+
 /* ============ AUTH PAGES (login, forgot password, reset password) ============ */
 .auth-link {
   display: inline-flex; align-items: center;
