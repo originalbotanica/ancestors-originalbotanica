@@ -67,10 +67,6 @@ export default async function CandlePage({ params }) {
       </header>
 
       <main className="memorial-page">
-        <div className="memorial-page-flame">
-          <img src="/white-candle.png" alt="A candle burning in memorial" />
-        </div>
-
         {memorial.photo_url ? (
           <div className="memorial-photo-circle has-photo">
             <img src={memorial.photo_url} alt={memorial.name} />
@@ -78,6 +74,10 @@ export default async function CandlePage({ params }) {
         ) : (
           <div className="memorial-photo-circle" aria-hidden="true">{initial}</div>
         )}
+
+        <div className="memorial-page-flame">
+          <img src="/white-candle.png" alt="A candle burning in memorial" />
+        </div>
 
         <h1 className="memorial-page-name">{memorial.name}</h1>
         {dates && <div className="memorial-page-dates">{dates}</div>}

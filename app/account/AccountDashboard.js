@@ -192,6 +192,8 @@ function MemorialCard({ memorial, ownerId }) {
       setSavedAt(Date.now());
       setSubmitting(false);
       router.refresh();
+      // Hide the saved banner after 4 seconds
+      setTimeout(() => setSavedAt((t) => (Date.now() - t > 3500 ? null : t)), 4000);
     } catch (err) {
       setErrorMsg(err.message || 'Could not save changes. Please try again.');
       setSubmitting(false);
@@ -301,10 +303,14 @@ function MemorialCard({ memorial, ownerId }) {
 
         {errorMsg && <p className="wizard-error">{errorMsg}</p>}
 
+        {savedAt && !errorMsg && (
+          <div className="memorial-card-saved-banner" role="status">
+            <span className="check" aria-hidden="true">✓</span>
+            <span>Changes saved.</span>
+          </div>
+        )}
+
         <div className="memorial-card-actions">
-          {savedAt && !dirty && !errorMsg && (
-            <span className="memorial-card-saved">Saved</span>
-          )}
           <button
             type="submit"
             className="btn-cta"
