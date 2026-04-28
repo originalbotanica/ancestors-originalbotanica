@@ -43,13 +43,11 @@ export default async function Home() {
           </div>
         </Link>
         <nav className="lp-nav">
-          <Link href="/altar">Visit the Altar</Link>
-          <Link href="/light-a-candle" className="btn-cta lp-nav-cta">
-            Light a Candle
-          </Link>
-          <Link href="/account" className="lp-nav-account">
-            My Account
-          </Link>
+          <Link href="/altar">The Altar</Link>
+          <Link href="/how-it-works">How It Works</Link>
+          <Link href="/light-a-candle" className="lp-nav-cta">Light a Candle</Link>
+          <a href="https://www.originalbotanica.com" target="_blank" rel="noopener noreferrer">Buy Spiritual Products</a>
+          <Link href="/account" className="lp-nav-account">My Account</Link>
         </nav>
       </header>
 
