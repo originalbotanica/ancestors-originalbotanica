@@ -135,13 +135,7 @@ export default async function Home() {
               <div className="lp-preview-grid">
                 {previews.map((m) => (
                   <Link key={m.hash} href={`/candle/${m.hash}`} className="lp-preview-tile">
-                    <div className="lp-preview-candle-wrap">
-                      {m.photo_url && (
-                        <div className="lp-preview-photo">
-                          <img src={m.photo_url} alt={m.name} />
-                        </div>
-                      )}
-                      <div className="candle-wrapper is-lit">
+                    <div className="lp-preview-candle-wrap">                      <div className="candle-wrapper is-lit">
                   <div className="flame-overlay">
                     <div className="flame-halo"></div>
                     <div className="flame-outer"></div>
@@ -151,6 +145,9 @@ export default async function Home() {
                     <div className="flame-blue"></div>
                     <div className="flame-light-cast"></div>
                   </div>
+                  {m.photo_url && (
+                    <img className="lp-preview-photo-overlay" src={m.photo_url} alt={m.name} />
+                  )}
                   <img className="lp-preview-candle" src="/white-candle.png" alt="" />
                 </div>
                     </div>
