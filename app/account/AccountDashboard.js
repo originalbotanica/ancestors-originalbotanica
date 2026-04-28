@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { createSupabaseBrowserClient } from '@/lib/auth-browser';
 
 // Status pill copy + class. Active is the default and shows nothing extra.
 const STATUS_LABELS = {
@@ -11,7 +12,10 @@ const STATUS_LABELS = {
   archived: { label: 'Archived', className: 'status-archived' },
 };
 
-export default function AccountDashboard({ memorials }) {
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5 MB
+
+export default function AccountDashboard({ memorials, ownerId }) {
   if (!memorials || memorials.length === 0) {
     return <EmptyState />;
   }
@@ -20,10 +24,10 @@ export default function AccountDashboard({ memorials }) {
     <div className="account-memorials">
       <h3 className="account-section-heading">Your altar</h3>
       <p className="account-section-sub">
-        Edit a name, add or change dates, refine a dedication. Changes save right to the candle.
+        Edit a name, add a photo, refine a dedication. Changes save right to the candle.
       </p>
       {memorials.map((m) => (
-        <MemorialCard key={m.hash} memorial={m} />
+        <MemorialCard key={m.hash} memorial={m} ownerId={ownerId} />
       ))}
     </div>
   );
@@ -44,27 +48,129 @@ function EmptyState() {
   );
 }
 
-function MemorialCard({ memorial }) {
+function MemorialCard({ memorial, ownerId }) {
   const router = useRouter();
+  const fileInputRef = useRef(null);
 
   const [name, setName] = useState(memorial.name || '');
   const [birthDate, setBirthDate] = useState(memorial.birth_date || '');
   const [deathDate, setDeathDate] = useState(memorial.death_date || '');
   const [dedication, setDedication] = useState(memorial.dedication || '');
+  const [photoUrl, setPhotoUrl] = useState(memorial.photo_url || null);
 
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [savedAt, setSavedAt] = useState(null);
 
   const status = memorial.status;
   const statusInfo = STATUS_LABELS[status];
 
-  // Detect unsaved changes so the Save button is meaningful.
+  // Detect unsaved changes so the Save button is meaningful. Photo uploads
+  // save themselves immediately, so they don't count toward dirty state.
   const dirty =
     name !== (memorial.name || '') ||
     birthDate !== (memorial.birth_date || '') ||
     deathDate !== (memorial.death_date || '') ||
     dedication !== (memorial.dedication || '');
+
+  async function persistPatch(payload) {
+    const res = await fetch(`/api/memorials/${memorial.hash}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data.error || 'Could not save changes. Please try again.');
+    }
+    return data;
+  }
+
+  async function handlePhotoPick(e) {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // reset so picking the same file twice still fires onChange
+    if (!file) return;
+
+    setErrorMsg('');
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setErrorMsg('Photos must be JPG, PNG, or WebP.');
+      return;
+    }
+    if (file.size > MAX_FILE_BYTES) {
+      setErrorMsg('Photos must be under 5 MB.');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const ext = file.name.split('.').pop().toLowerCase();
+      const cleanExt = ['jpg', 'jpeg', 'png', 'webp'].includes(ext) ? ext : 'jpg';
+      const path = `${ownerId}/${memorial.hash}.${cleanExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('memorial-photos')
+        .upload(path, file, {
+          upsert: true,
+          contentType: file.type,
+          cacheControl: '3600',
+        });
+
+      if (uploadError) throw new Error(uploadError.message);
+
+      const { data: urlData } = supabase.storage
+        .from('memorial-photos')
+        .getPublicUrl(path);
+
+      // Cache-bust by appending a timestamp so the browser refetches even when
+      // the path didn't change (replacing an existing photo).
+      const bustedUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+
+      await persistPatch({
+        name: name.trim(),
+        birthDate: birthDate || null,
+        deathDate: deathDate || null,
+        dedication: dedication.trim() || null,
+        photoUrl: bustedUrl,
+      });
+
+      setPhotoUrl(bustedUrl);
+      setUploading(false);
+      router.refresh();
+    } catch (err) {
+      setErrorMsg(err.message || 'Could not upload the photo.');
+      setUploading(false);
+    }
+  }
+
+  async function handleRemovePhoto() {
+    if (!photoUrl) return;
+    if (!confirm('Remove this photo? You can upload a new one anytime.')) return;
+
+    setErrorMsg('');
+    setUploading(true);
+    try {
+      // Best effort — clear the DB pointer first; the file in storage can be
+      // garbage-collected later. We don't fail the user if the file delete
+      // fails because the candle no longer references it anyway.
+      await persistPatch({
+        name: name.trim(),
+        birthDate: birthDate || null,
+        deathDate: deathDate || null,
+        dedication: dedication.trim() || null,
+        photoUrl: null,
+      });
+
+      setPhotoUrl(null);
+      setUploading(false);
+      router.refresh();
+    } catch (err) {
+      setErrorMsg(err.message || 'Could not remove the photo.');
+      setUploading(false);
+    }
+  }
 
   async function handleSave(e) {
     e.preventDefault();
@@ -77,30 +183,17 @@ function MemorialCard({ memorial }) {
 
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/memorials/${memorial.hash}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name.trim(),
-          birthDate: birthDate || null,
-          deathDate: deathDate || null,
-          dedication: dedication.trim() || null,
-        }),
+      await persistPatch({
+        name: name.trim(),
+        birthDate: birthDate || null,
+        deathDate: deathDate || null,
+        dedication: dedication.trim() || null,
       });
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        setErrorMsg(data.error || 'Could not save changes. Please try again.');
-        setSubmitting(false);
-        return;
-      }
-
       setSavedAt(Date.now());
       setSubmitting(false);
-      // Refresh the server component so the data in props is fresh on next render.
       router.refresh();
     } catch (err) {
-      setErrorMsg('Could not reach the server. Please check your connection and try again.');
+      setErrorMsg(err.message || 'Could not save changes. Please try again.');
       setSubmitting(false);
     }
   }
@@ -119,6 +212,45 @@ function MemorialCard({ memorial }) {
             Visit candle
           </Link>
         )}
+      </div>
+
+      <div className="memorial-card-photo">
+        <div className="photo-preview">
+          {photoUrl ? (
+            <img src={photoUrl} alt={name || 'Memorial photo'} />
+          ) : (
+            <div className="photo-placeholder" aria-hidden="true">
+              {(name || '?').charAt(0).toUpperCase()}
+            </div>
+          )}
+        </div>
+        <div className="photo-controls">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handlePhotoPick}
+            style={{ display: 'none' }}
+          />
+          <button
+            type="button"
+            className="btn-secondary photo-btn"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+          >
+            {uploading ? 'Uploading…' : photoUrl ? 'Replace photo' : 'Add a photo'}
+          </button>
+          {photoUrl && !uploading && (
+            <button
+              type="button"
+              className="photo-remove-btn"
+              onClick={handleRemovePhoto}
+            >
+              Remove
+            </button>
+          )}
+          <p className="photo-hint">JPG, PNG, or WebP · up to 5 MB</p>
+        </div>
       </div>
 
       <form onSubmit={handleSave} className="memorial-card-form">

@@ -525,6 +525,70 @@ a:hover { color: var(--amber-warm); }
 .status-paused { color: var(--muted); }
 .status-archived { color: var(--rust); }
 
+.memorial-card-photo {
+  display: flex; align-items: center; gap: 1.4rem;
+  margin-bottom: 1.5rem; padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.photo-preview {
+  flex: 0 0 auto; width: 96px; height: 96px;
+  border-radius: 50%; overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+}
+.photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+.photo-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem; color: var(--muted); font-weight: 500;
+}
+.photo-controls {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem;
+}
+.photo-btn {
+  font-size: 0.72rem; padding: 0.6rem 1.2rem; letter-spacing: 0.16em;
+}
+.photo-remove-btn {
+  background: none; border: none; padding: 0;
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 0.85rem; color: var(--rust);
+  cursor: pointer; text-decoration: underline;
+}
+.photo-remove-btn:hover { color: var(--amber); }
+.photo-hint {
+  margin: 0; font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 0.8rem; color: var(--muted);
+}
+@media (max-width: 480px) {
+  .memorial-card-photo { flex-direction: column; align-items: flex-start; }
+}
+
+/* Photo on the candle page — replaces the initial circle when available */
+.memorial-photo-circle.has-photo {
+  padding: 0; overflow: hidden; background: var(--bg);
+}
+.memorial-photo-circle.has-photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Photo thumbnail on the altar — small avatar above the candle */
+.altar-candle-wrap { position: relative; }
+.altar-photo {
+  position: absolute; top: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 64px; height: 64px;
+  border-radius: 50%; overflow: hidden;
+  border: 2px solid var(--bg);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  z-index: 2; background: var(--bg);
+}
+.altar-photo img { width: 100%; height: 100%; object-fit: cover; }
+.altar-candle-wrap .altar-candle { position: relative; z-index: 1; }
+
 .memorial-card-form label {
   display: block;
   font-family: "brandon-grotesque", sans-serif;

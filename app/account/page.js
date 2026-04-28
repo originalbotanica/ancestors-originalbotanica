@@ -24,7 +24,7 @@ export default async function AccountPage() {
   // candles and other customers' active memorials that the user can't edit.
   const { data: memorials, error } = await supabase
     .from('memorials')
-    .select('hash, name, birth_date, death_date, dedication, status, created_at')
+    .select('hash, name, birth_date, death_date, dedication, photo_url, status, created_at')
     .eq('owner_id', user.id)
     .order('created_at', { ascending: true });
 
@@ -52,7 +52,7 @@ export default async function AccountPage() {
           <p className="wizard-sub">Signed in as {user.email}</p>
         </div>
 
-        <AccountDashboard memorials={memorials || []} />
+        <AccountDashboard memorials={memorials || []} ownerId={user.id} />
 
         <form action="/api/auth/logout" method="POST" className="account-signout">
           <button type="submit" className="btn-secondary">

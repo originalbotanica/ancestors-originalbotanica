@@ -34,6 +34,15 @@ export async function PATCH(request, { params }) {
   const birthDate = body.birthDate ? body.birthDate.toString().trim() : null;
   const deathDate = body.deathDate ? body.deathDate.toString().trim() : null;
   const dedication = body.dedication ? body.dedication.toString().trim() : null;
+  // photoUrl is opt-in: clients that don't include it leave the existing
+  // value untouched. An explicit `null` clears the photo. A string sets it.
+  const hasPhotoUrlField = Object.prototype.hasOwnProperty.call(body, 'photoUrl');
+  const photoUrl =
+    body.photoUrl === null
+      ? null
+      : typeof body.photoUrl === 'string'
+        ? body.photoUrl.trim() || null
+        : undefined;
 
   if (!name) {
     return NextResponse.json({ error: 'Please tell us their name.' }, { status: 400 });
@@ -63,15 +72,20 @@ export async function PATCH(request, { params }) {
     );
   }
 
+  const updatePayload = {
+    name,
+    birth_date: birthDate,
+    death_date: deathDate,
+    dedication,
+    updated_at: new Date().toISOString(),
+  };
+  if (hasPhotoUrlField) {
+    updatePayload.photo_url = photoUrl; // null clears, string sets
+  }
+
   const { data, error } = await supabase
     .from('memorials')
-    .update({
-      name,
-      birth_date: birthDate,
-      death_date: deathDate,
-      dedication,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updatePayload)
     .eq('hash', hash)
     .select()
     .maybeSingle();

@@ -26,7 +26,7 @@ function formatDates(birth, death) {
 export default async function AltarPage() {
   const { data: memorials, error } = await supabasePublic
     .from('memorials')
-    .select('hash, name, birth_date, death_date')
+    .select('hash, name, birth_date, death_date, photo_url')
     .eq('status', 'active')
     .order('created_at', { ascending: false });
 
@@ -67,7 +67,12 @@ export default async function AltarPage() {
             {memorials.map((m) => (
               <Link key={m.hash} href={`/candle/${m.hash}`} className="altar-tile">
                 <div className="altar-candle-wrap">
-                  <img src="/white-candle.png" alt="" />
+                  {m.photo_url && (
+                    <div className="altar-photo">
+                      <img src={m.photo_url} alt={m.name} />
+                    </div>
+                  )}
+                  <img className="altar-candle" src="/white-candle.png" alt="" />
                 </div>
                 <div className="altar-name">{m.name}</div>
                 <div className="altar-dates">{formatDates(m.birth_date, m.death_date)}</div>
