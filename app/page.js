@@ -55,7 +55,18 @@ export default async function Home() {
         {/* ── Hero ─────────────────────────────────────────── */}
         <section className="lp-hero">
           <div className="lp-hero-candle">
-            <img src="/white-candle.png" alt="A prayer candle" />
+            <div className="candle-wrapper is-lit">
+              <div className="flame-overlay">
+                <div className="flame-halo"></div>
+                <div className="flame-outer"></div>
+                <div className="flame-mid"></div>
+                <div className="flame-inner"></div>
+                <div className="flame-tip"></div>
+                <div className="flame-blue"></div>
+                <div className="flame-light-cast"></div>
+              </div>
+              <img src="/white-candle.png" alt="A prayer candle" />
+            </div>
           </div>
           <div className="lp-hero-copy">
             <h1>
@@ -130,7 +141,18 @@ export default async function Home() {
                           <img src={m.photo_url} alt={m.name} />
                         </div>
                       )}
-                      <img className="lp-preview-candle" src="/white-candle.png" alt="" />
+                      <div className="candle-wrapper is-lit">
+                  <div className="flame-overlay">
+                    <div className="flame-halo"></div>
+                    <div className="flame-outer"></div>
+                    <div className="flame-mid"></div>
+                    <div className="flame-inner"></div>
+                    <div className="flame-tip"></div>
+                    <div className="flame-blue"></div>
+                    <div className="flame-light-cast"></div>
+                  </div>
+                  <img className="lp-preview-candle" src="/white-candle.png" alt="" />
+                </div>
                     </div>
                     <div className="lp-preview-name">{m.name}</div>
                     {formatDates(m.birth_date, m.death_date) && (
@@ -283,7 +305,18 @@ export default async function Home() {
         <section className="lp-closing">
           <div className="lp-inner lp-closing-inner">
             <div className="lp-closing-candle">
+              <div className="candle-wrapper is-lit">
+              <div className="flame-overlay">
+                <div className="flame-halo"></div>
+                <div className="flame-outer"></div>
+                <div className="flame-mid"></div>
+                <div className="flame-inner"></div>
+                <div className="flame-tip"></div>
+                <div className="flame-blue"></div>
+                <div className="flame-light-cast"></div>
+              </div>
               <img src="/white-candle.png" alt="A prayer candle" />
+            </div>
             </div>
             <h2>Keep their flame burning.</h2>
             <p>Light a candle today. It takes less than five minutes to set up.</p>
