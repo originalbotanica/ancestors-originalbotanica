@@ -17,12 +17,15 @@ export default async function AccountPage() {
 
   if (!user) redirect('/account/login');
 
-  // RLS gates this — the auth-aware client only returns memorials owned by the
-  // signed-in user. Seed candles (no owner_id) and other customers' memorials
-  // are filtered out at the database layer.
+  // /account shows only the candles the signed-in user actually owns. Note:
+  // the SELECT RLS policy is more permissive than UPDATE — public-read of active
+  // memorials lets the altar page work for everyone — so we have to filter
+  // explicitly by owner_id here, otherwise the dashboard would show seed
+  // candles and other customers' active memorials that the user can't edit.
   const { data: memorials, error } = await supabase
     .from('memorials')
     .select('hash, name, birth_date, death_date, dedication, status, created_at')
+    .eq('owner_id', user.id)
     .order('created_at', { ascending: true });
 
   if (error) {
