@@ -1469,7 +1469,7 @@ a:hover { color: var(--amber-warm); }
   text-decoration: none;
   font-family: var(--font-brandon), brandon-grotesque, sans-serif;
   font-weight: 600;
-  font-size: 0.72rem;
+  font-size: 0.9rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   padding: 0 20px;
@@ -1487,7 +1487,7 @@ a:hover { color: var(--amber-warm); }
 
 .site-footer-copy {
   color: rgba(255,255,255,0.3);
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   letter-spacing: 0.06em;
   margin: 0;
 }
