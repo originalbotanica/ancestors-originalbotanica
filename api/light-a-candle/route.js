@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { randomBytes } from 'crypto';
 import { supabaseAdmin } from '@/lib/supabase';
 import { stripe, priceIdFor, tierLabel } from '@/lib/stripe';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 // Generate a short URL-friendly hash for memorial URLs.
 function makeHash() {
@@ -20,6 +21,14 @@ const VALID_INTERVALS = new Set(['monthly', 'yearly']);
 export async function POST(request) {
   try {
     const body = await request.json().catch(() => ({}));
+        const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1';
+        const { allowed } = await checkRateLimit(`light-a-candle:${ip}`, 5, 60);
+        if (!allowed) {
+                return NextResponse.json(
+                  { error: 'Too many requests. Please wait a moment and try again.' },
+                  { status: 429 }
+                        );
+        }
 
     const lovedOneName = (body.lovedOneName || '').toString().trim().slice(0, 200);
     const birthDate = (body.birthDate || '').toString().trim() || null;
