@@ -72,7 +72,18 @@ export default async function AltarPage() {
                       <img src={m.photo_url} alt={m.name} />
                     </div>
                   )}
-                  <img className="altar-candle" src="/white-candle.png" alt="" />
+                  <div className="candle-wrapper is-lit">
+                <div className="flame-overlay">
+                  <div className="flame-halo"></div>
+                  <div className="flame-outer"></div>
+                  <div className="flame-mid"></div>
+                  <div className="flame-inner"></div>
+                  <div className="flame-tip"></div>
+                  <div className="flame-blue"></div>
+                  <div className="flame-light-cast"></div>
+                </div>
+                <img className="altar-candle" src="/white-candle.png" alt="" />
+              </div>
                 </div>
                 <div className="altar-name">{m.name}</div>
                 <div className="altar-dates">{formatDates(m.birth_date, m.death_date)}</div>
