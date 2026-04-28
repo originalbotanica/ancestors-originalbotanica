@@ -32,6 +32,18 @@ export default async function AccountPage() {
     console.error('Account page memorials fetch error:', error);
   }
 
+  // Fetch the user's active subscription so we can display plan info in the
+  // billing section. Exclude canceled subscriptions — if one exists we show
+  // nothing rather than stale plan data.
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('tier, billing_interval, status, current_period_end, cancel_at_period_end, paused')
+    .eq('user_id', user.id)
+    .neq('status', 'canceled')
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   const fullName = user.user_metadata?.full_name || null;
   const firstName = fullName ? fullName.split(' ')[0] : null;
 
@@ -52,7 +64,7 @@ export default async function AccountPage() {
           <p className="wizard-sub">Signed in as {user.email}</p>
         </div>
 
-        <AccountDashboard memorials={memorials || []} ownerId={user.id} />
+        <AccountDashboard memorials={memorials || []} ownerId={user.id} subscription={subscription || null} />
 
         <form action="/api/auth/logout" method="POST" className="account-signout">
           <button type="submit" className="btn-secondary">
