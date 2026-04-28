@@ -1491,3 +1491,24 @@ a:hover { color: var(--amber-warm); }
   letter-spacing: 0.06em;
   margin: 0;
 }
+
+/* ============================================================
+   CANDLE PHOTO OVERLAY (memorial candle page)
+   ============================================================ */
+
+/* The candle-wrapper is already position:relative from the flame CSS.
+   This photo sits centered on the candle body, slightly below mid-height. */
+.candle-photo-overlay {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 62px;
+  height: 62px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(241,166,69,0.55);
+  box-shadow: 0 0 12px rgba(241,166,69,0.3), 0 0 0 3px rgba(0,0,0,0.35);
+  z-index: 3;
+  pointer-events: none;
+}
