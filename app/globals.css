@@ -792,7 +792,7 @@ a:hover { color: var(--amber-warm); }
   gap: 0.5rem 3.5rem;
 }
 .site-footer-nav a {
-  font-size: 0.78rem;
+  font-size: 1.2rem;
   letter-spacing: 0.28em;
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
@@ -802,7 +802,7 @@ a:hover { color: var(--amber-warm); }
 .site-footer-nav a:hover { color: var(--amber); }
 .site-footer-copy {
   color: rgba(255, 255, 255, 0.25);
-  font-size: 0.72rem;
+  font-size: 1rem;
   letter-spacing: 0.06em;
   margin: 0;
 }
