@@ -601,7 +601,7 @@ a:hover { color: var(--amber-warm); }
 /* Photo thumbnail on the altar — small avatar above the candle */
 .altar-candle-wrap { position: relative; }
 .altar-photo {
-  position: absolute; top: -8px; left: 50%;
+  position: absolute; top: 95px; left: 50%;
   transform: translateX(-50%);
   width: 64px; height: 64px;
   border-radius: 50%; overflow: hidden;
