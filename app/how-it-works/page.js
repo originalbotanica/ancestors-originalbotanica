@@ -32,9 +32,10 @@ export default function HowItWorksPage() {
             <div className="hiw-step-body">
               <h2>Light a Candle</h2>
               <p>
-                Click <strong>Light a Candle</strong> and enter the name of your loved one along
-                with their birth and passing years. You may also upload a photo so their face
-                shines on the altar for all to see.
+                Click <a href="/light-a-candle" className="hiw-inline-link">Light a Candle</a> and
+                enter the name of your loved one along with their birth and passing years. You can
+                upload a photo, write a prayer or personal message, and set your intention for the
+                light you are offering. Everything is held with care.
               </p>
             </div>
           </div>
@@ -56,9 +57,9 @@ export default function HowItWorksPage() {
             <div className="hiw-step-body">
               <h2>Visit Anytime</h2>
               <p>
-                Return to <strong>The Altar</strong> whenever you wish to sit with your ancestors.
-                Click any candle to read the tribute and spend a moment in reflection. The altar
-                is always open, always lit.
+                Return to <a href="/altar" className="hiw-inline-link">The Altar</a> whenever you
+                wish to sit with your ancestors. Click any candle to read the tribute and spend a
+                moment in reflection. The altar is always open, always lit.
               </p>
             </div>
           </div>
