@@ -1,20 +1,27 @@
-import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 
 export const metadata = {
-  title: 'How It Works — Ancestors · Original Botanica',
-  description: 'Learn how to light a candle and honor your ancestors on the Original Botanica Ancestor Altar.',
+  title: 'How It Works - Ancestors - Original Botanica',
+  description: 'Learn how to honor your ancestors on the Original Botanica Ancestor Altar.',
 };
 
 export default function HowItWorksPage() {
   return (
     <>
-      <SiteHeader />
+      <header className="site-header">
+        <a className="brand-logo-link" aria-label="Home" href="/">
+          <div className="brand-logo">
+            <img src="/logo-original-botanica.svg" alt="Original Botanica" />
+            <div className="tag">Ancestor Altar</div>
+          </div>
+        </a>
+      </header>
+
       <main className="how-it-works-page">
         <div className="hiw-hero">
           <h1 className="hiw-title">How It Works</h1>
           <p className="hiw-subtitle">
-            A living altar for those who came before us — tended with love, open to all.
+            A living altar for those who came before us, tended with love, open to all.
           </p>
         </div>
 
@@ -61,7 +68,7 @@ export default function HowItWorksPage() {
             <div className="hiw-step-body">
               <h2>Share the Light</h2>
               <p>
-                Each candle has its own page you can share with family and friends — a permanent
+                Each candle has its own page you can share with family and friends, a permanent
                 digital memorial where loved ones can gather, remember, and carry the light forward.
               </p>
             </div>
@@ -74,6 +81,7 @@ export default function HowItWorksPage() {
           <a href="/light-a-candle" className="hiw-cta-btn">Light a Candle</a>
         </div>
       </main>
+
       <SiteFooter />
     </>
   );
