@@ -198,12 +198,16 @@ a:hover { color: var(--amber-warm); }
   font-family: 'Playfair Display', serif;
   font-size: 1.1rem;
   color: var(--cream);
+  position: relative;
+  z-index: 5;
 }
 .altar-tile .altar-dates {
   font-family: "brandon-grotesque", sans-serif;
   font-size: 0.72rem; color: var(--muted);
   letter-spacing: 0.16em; margin-top: 0.3rem;
   text-transform: uppercase;
+  position: relative;
+  z-index: 5;
 }
 
 /* ============ MEMORIAL DETAIL PAGE ============ */
@@ -1344,13 +1348,13 @@ a:hover { color: var(--amber-warm); }
 
 .flame-overlay {
   position: absolute;
-  bottom: 100%;
+  bottom: calc(100% - 38px);
   left: 50%;
   transform: translateX(-50%);
   width: 56px;
   height: 90px;
   pointer-events: none;
-  margin-bottom: -6px;
+  margin-bottom: 0;
 }
 
 .flame-halo {
