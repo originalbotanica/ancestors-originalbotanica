@@ -3,14 +3,20 @@ import Link from 'next/link';
 export default function SiteFooter() {
   return (
     <footer className="site-footer">
-      <nav className="site-footer-nav">
-        <Link href="/altar">The Altar</Link>
-        <Link href="/how-it-works">How It Works</Link>
-        <Link href="/light-a-candle">Light a Candle</Link>
-        <a href="https://www.originalbotanica.com" target="_blank" rel="noopener noreferrer">Buy Spiritual Products</a>
-        <Link href="/account">My Account</Link>
-      </nav>
-      <p className="site-footer-copy">Copyright &copy; 2026 Original Botanica. All Rights Reserved.&nbsp; originalbotanica.com</p>
+      <div className="site-footer-inner">
+        <div className="site-footer-logo">
+          <img src="/logo-original-botanica.svg" alt="Original Botanica" />
+        </div>
+        <p className="site-footer-brand">ANCESTOR ALTAR</p>
+        <nav className="site-footer-nav">
+          <Link href="/altar">THE ALTAR</Link>
+          <Link href="/how-it-works">HOW IT WORKS</Link>
+          <Link href="/light-a-candle">LIGHT A CANDLE</Link>
+          <a href="https://www.originalbotanica.com" target="_blank" rel="noopener noreferrer">BUY SPIRITUAL PRODUCTS</a>
+          <Link href="/account">MY ACCOUNT</Link>
+        </nav>
+        <p className="site-footer-copy">Copyright &copy; 2026 Original Botanica. All Rights Reserved.</p>
+      </div>
     </footer>
   );
 }
