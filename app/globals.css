@@ -1646,3 +1646,10 @@ a:hover { color: var(--amber-warm); }
   .hiw-step { flex-direction: column; gap: 1rem; }
   .hiw-step-number { width: 40px; height: 40px; font-size: 1.1rem; }
 }
+
+.hiw-inline-link {
+  color: var(--amber);
+  text-decoration: none;
+  font-weight: 600;
+}
+.hiw-inline-link:hover { text-decoration: underline; }
