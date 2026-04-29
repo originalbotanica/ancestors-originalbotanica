@@ -1531,3 +1531,118 @@ a:hover { color: var(--amber-warm); }
   z-index: 3;
   pointer-events: none;
 }
+
+
+/* ── How It Works Page ──────────────────────────── */
+.how-it-works-page {
+  min-height: 100vh;
+  background: var(--near-black);
+  color: var(--cream);
+  padding-bottom: 5rem;
+}
+
+.hiw-hero {
+  text-align: center;
+  padding: 5rem 2rem 3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.hiw-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  color: var(--cream);
+  margin: 0 0 1rem;
+  letter-spacing: 0.04em;
+}
+
+.hiw-subtitle {
+  font-size: 1.15rem;
+  color: rgba(255,255,255,0.65);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.hiw-steps {
+  max-width: 720px;
+  margin: 4rem auto 0;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.hiw-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.hiw-step-number {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--amber);
+  color: var(--near-black);
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.2rem;
+}
+
+.hiw-step-body h2 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--cream);
+  margin: 0 0 0.6rem;
+  letter-spacing: 0.02em;
+}
+
+.hiw-step-body p {
+  color: rgba(255,255,255,0.7);
+  line-height: 1.75;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.hiw-step-body strong {
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.hiw-cta {
+  text-align: center;
+  margin-top: 5rem;
+  padding: 0 2rem;
+}
+
+.hiw-cta-text {
+  color: rgba(255,255,255,0.6);
+  font-size: 1.05rem;
+  margin: 0 0 1.5rem;
+}
+
+.hiw-cta-btn {
+  display: inline-block;
+  background: var(--amber);
+  color: var(--near-black);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.85rem 2.5rem;
+  border-radius: 999px;
+  transition: opacity 0.2s;
+}
+
+.hiw-cta-btn:hover { opacity: 0.85; }
+
+@media (max-width: 540px) {
+  .hiw-step { flex-direction: column; gap: 1rem; }
+  .hiw-step-number { width: 40px; height: 40px; font-size: 1.1rem; }
+}
