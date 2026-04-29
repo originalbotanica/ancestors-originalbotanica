@@ -1145,15 +1145,21 @@ a:hover { color: var(--amber-warm); }
 .lp-preview-dates { font-size: 0.72rem; color: var(--muted); }
 .lp-preview-link { text-align: center; margin-top: 2.5rem; }
 .lp-preview-link a {
-  font-size: 1.15rem;
+  display: inline-block;
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--amber);
   text-decoration: none;
-  border-bottom: 1.5px solid var(--amber);
-  padding-bottom: 1px;
-  transition: border-color 0.2s;
+  border: 1.5px solid var(--amber);
+  border-radius: 6px;
+  padding: 0.65rem 1.75rem;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
-.lp-preview-link a:hover { border-color: var(--amber); color: var(--amber-warm); }
+.lp-preview-link a:hover {
+  background: var(--amber);
+  color: #1a0a00;
+  border-color: var(--amber);
+}
 
 /* ── Plans ──────────────────────────────────────────── */
 .lp-plans { background: var(--bg-2); }
