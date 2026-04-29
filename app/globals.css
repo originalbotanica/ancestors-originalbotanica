@@ -764,15 +764,48 @@ a:hover { color: var(--amber-warm); }
 
 /* ============ FOOTER ============ */
 .site-footer {
-  padding: 3rem 1.5rem 2rem;
+  background: #000;
+  padding: 4rem 2rem 2.5rem;
   text-align: center;
-  border-top: 1px solid var(--line);
-  color: var(--muted); font-size: 0.88rem;
 }
-.site-footer a { color: var(--muted); text-decoration: none; }
-.site-footer a:hover { color: var(--amber); }
-.site-footer .links { margin-top: 0.6rem; }
-
+.site-footer-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+.site-footer-logo { width: 130px; }
+.site-footer-logo img { width: 100%; height: auto; display: block; }
+.site-footer-brand {
+  font-size: 0.8rem;
+  letter-spacing: 0.4em;
+  color: var(--amber);
+  font-weight: 500;
+  margin: 0;
+}
+.site-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 2rem;
+}
+.site-footer-nav a {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: rgba(235, 225, 200, 0.6);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.site-footer-nav a:hover { color: var(--amber); }
+.site-footer-copy {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
 /* ── Plan summary (account billing section) ──────────────────────────── */
 .plan-summary {
   margin-bottom: 1.25rem;
@@ -1460,40 +1493,7 @@ a:hover { color: var(--amber-warm); }
   text-align: center;
 }
 
-.site-footer-nav {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
 
-.site-footer-nav a {
-  color: #fff;
-  text-decoration: none;
-  font-family: var(--font-brandon), brandon-grotesque, sans-serif;
-  font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 0 20px;
-  border-right: 1px solid rgba(255,255,255,0.2);
-  line-height: 1;
-}
-
-.site-footer-nav a:last-child {
-  border-right: none;
-}
-
-.site-footer-nav a:hover {
-  color: var(--amber);
-}
-
-.site-footer-copy {
-  color: rgba(255,255,255,0.3);
-  font-size: 0.76rem;
-  letter-spacing: 0.06em;
-  margin: 0;
-}
 
 /* ============================================================
    CANDLE PHOTO OVERLAY (memorial candle page)
