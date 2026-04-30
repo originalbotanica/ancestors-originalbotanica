@@ -1,0 +1,103 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+
+const RITUAL_LINES = [
+  { delay: 800,   key: false, text: 'Take a few quiet moments to connect with your loved one.' },
+  { delay: 2800,  key: false, text: 'Breathe deeply — in through your nose, out through your mouth.' },
+  { delay: 4800,  key: false, text: 'Let the outside world soften.' },
+  { delay: 7000,  key: false, text: 'Think of the person you’re honoring.' },
+  { delay: 9000,  key: true,  text: 'Picture their face, their voice, a memory that makes you smile.' },
+  { delay: 11500, key: false, text: 'When you’re ready, light your candle with intention.' },
+  { delay: 13500, key: true,  text: 'As the flame appears, silently say their name.' },
+  { delay: 15500, key: false, text: null },
+];
+const BTN_DELAY = 17700;
+
+export default function CeremonyClient({ memorial }) {
+  const [introVisible,setIntroVisible]=useState(false);
+  const [visibleLines,setVisibleLines]=useState([]);
+  const [btnVisible,setBtnVisible]=useState(false);
+  const [lighting,setLighting]=useState(false);
+  const [isLit,setIsLit]=useState(false);
+  const [confirmVisible,setConfirmVisible]=useState(false);
+  const sceneRef=useRef(null);
+
+  useEffect(()=>{
+    const t=[];
+    t.push(setTimeout(()=>setIntroVisible(true),400));
+    RITUAL_LINES.forEach((line,i)=>{
+      t.push(setTimeout(()=>setVisibleLines(p=>[...p,i]),line.delay));
+    });
+    t.push(setTimeout(()=>setBtnVisible(true),BTN_DELAY));
+    return ()=>t.forEach(clearTimeout);
+  },[]);
+
+  function lightCandle(){
+    if(lighting||isLit)return;
+    setLighting(true);
+    if(sceneRef.current)sceneRef.current.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>setIsLit(true),750);
+    setTimeout(()=>setConfirmVisible(true),3400);
+  }
+
+  return (
+    <>
+      <header className="site-header">
+        <Link href="/" className="brand-logo-link" aria-label="Home">
+          <div className="brand-logo">
+            <img src="/logo-original-botanica.svg" alt="Original Botanica" />
+            <div className="tag">Ancestor Altar</div>
+          </div>
+        </Link>
+      </header>
+      <main className="ceremony-main">
+        <div ref={sceneRef} className={'ceremony-candle-scene'+(isLit?' is-lit':'')}>
+          <div className="ceremony-candle-glow" />
+          <div className={'candle-wrapper'+(isLit?' is-lit':'')}>
+            <div className="flame-overlay">
+              <div className="flame-halo" /><div className="flame-outer" />
+              <div className="flame-mid" /><div className="flame-inner" />
+              <div className="flame-tip" /><div className="flame-blue" />
+            </div>
+            <img src="/white-candle.png" alt="Candle" className="ceremony-candle-img" />
+          </div>
+        </div>
+        <div className="ceremony-ritual">
+          <p className={'ceremony-intro'+(introVisible?' visible':'')}>A moment of intention</p>
+          {RITUAL_LINES.map((line,i)=>{
+            const vis=visibleLines.includes(i);
+            const cls='ceremony-line'+(line.key?' key':'')+(vis?' visible':'');
+            if(line.text===null)return(<p key={i} className={cls}>Offer a few words from your heart — a thank you, a wish, a prayer, or simply <em>“I miss you.”</em></p>);
+            return(<p key={i} className={cls}>{line.text}</p>);
+          })}
+        </div>
+        <div className={'ceremony-btn-wrap'+(btnVisible?' visible':'')}>
+          <button className="ceremony-light-btn" onClick={lightCandle} disabled={lighting}>
+            {lighting?'Lighting…':'Light the Candle'}
+          </button>
+          <span className="ceremony-btn-note">Your candle has been waiting for this moment.</span>
+        </div>
+      </main>
+      <div className={'ceremony-confirmation'+(confirmVisible?' visible':'')}>
+        <div className="ceremony-candle-scene is-lit" style={{marginBottom:'32px'}}>
+          <div className="ceremony-candle-glow" />
+          <div className="candle-wrapper is-lit">
+            <div className="flame-overlay">
+              <div className="flame-halo" /><div className="flame-outer" />
+              <div className="flame-mid" /><div className="flame-inner" />
+              <div className="flame-tip" /><div className="flame-blue" />
+            </div>
+            <img src="/white-candle.png" alt="Candle" className="ceremony-candle-img" />
+          </div>
+        </div>
+        <p className="ceremony-confirm-name">{memorial.name}</p>
+        <div className="ceremony-confirm-divider" />
+        <p className="ceremony-confirm-line">Their candle is lit. They are remembered.<br />Sit with the flame for as long as you need.</p>
+        <p className="ceremony-confirm-sub">Feel the connection that still surrounds you.</p>
+        <Link href={'/candle/'+memorial.hash} className="ceremony-visit-btn">Visit their altar</Link>
+      </div>
+    </>
+  );
+}
