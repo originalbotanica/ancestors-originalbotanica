@@ -1811,3 +1811,42 @@ a:hover { color: var(--amber-warm); }
 .ceremony-confirmation.visible .ceremony-visit-btn { opacity: 1; }
 .ceremony-visit-btn:hover { background: rgba(212,164,58,0.1); border-color: rgba(212,164,58,0.65); }
 @media (max-width: 480px) { .ceremony-main { padding: 40px 20px 60px; } .ceremony-intro { font-size: 17px; } .ceremony-line { font-size: 16px; } }
+
+
+/* ── CEREMONY FIXES (button size, note text, confirmation overflow) ── */
+
+/* Bigger "Light the Candle" CTA */
+.ceremony-light-btn {
+  font-size: 19px;
+  letter-spacing: 0.10em;
+  padding: 18px 56px;
+  background: rgba(212,164,58,0.10);
+}
+.ceremony-light-btn:hover {
+  background: rgba(212,164,58,0.22);
+  border-color: rgba(212,164,58,0.9);
+  box-shadow: 0 0 32px rgba(212,164,58,0.25);
+}
+
+/* Larger note text */
+.ceremony-btn-note {
+  font-size: 15px;
+  color: rgba(224,216,204,0.6);
+}
+
+/* Fix confirmation overlay — prevent candle from being clipped at top */
+.ceremony-confirmation {
+  overflow-y: auto;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  justify-content: flex-start;
+}
+
+/* Smaller candle in confirmation so content fits in viewport */
+.ceremony-confirmation .ceremony-candle-scene {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+.ceremony-confirmation .ceremony-candle-img {
+  width: 80px;
+}
