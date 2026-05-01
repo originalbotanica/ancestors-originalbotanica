@@ -1850,3 +1850,69 @@ a:hover { color: var(--amber-warm); }
 .ceremony-confirmation .ceremony-candle-img {
   width: 80px;
 }
+
+/* ============ PRIVACY TOGGLE ============ */
+.privacy-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+.privacy-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    border: 1.5px solid var(--muted);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    margin-top: 2px;
+    transition: border-color 0.2s, background 0.2s;
+}
+.privacy-checkbox:checked {
+    background: var(--amber);
+    border-color: var(--amber);
+}
+.privacy-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 6px;
+    height: 10px;
+    border: 2px solid #0c0a08;
+    border-top: none;
+    border-left: none;
+    transform: rotate(40deg);
+}
+.privacy-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-top: 2px;
+}
+
+/* ============ AUTH SWITCH (sign-in toggle) ============ */
+.auth-switch-note {
+    font-size: 0.88rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 16px;
+}
+.auth-switch-btn {
+    background: none;
+    border: none;
+    color: var(--amber);
+    font-size: 0.88rem;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    font-family: inherit;
+}
+.auth-switch-btn:hover {
+    color: var(--amber-warm);
+}
