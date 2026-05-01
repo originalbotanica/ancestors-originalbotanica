@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SiteFooter from '../components/SiteFooter';
+import { createSupabaseBrowserClient } from '@/lib/auth-browser';
 
 const TIERS = [
   {
@@ -20,7 +21,7 @@ const TIERS = [
     monthly: '19.95',
     yearly: '189.95',
     description:
-      'A family altar of your own. Up to seven loved ones, each with their own candle, photo, and remembrances — all tended together.',
+      'A family altar of your own. Up to seven loved ones, each with their own candle, photo, and remembrances â all tended together.',
   },
 ];
 
@@ -40,6 +41,10 @@ export default function LightACandlePage() {
   const [customerName, setCustomerName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isPrivate, setIsPrivate] = useState(false);
+
+  // Step 4 mode: 'create' (new account) or 'signin' (existing account)
+  const [accountMode, setAccountMode] = useState('create');
 
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -55,7 +60,7 @@ export default function LightACandlePage() {
     };
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
 
@@ -68,7 +73,7 @@ export default function LightACandlePage() {
 
       // Handle return from Stripe checkout
       if (params.get('canceled') === '1') {
-        setErrorMsg('Checkout was cancelled. Your candle is waiting — try again whenever you are ready.');
+        setErrorMsg('Checkout was cancelled. Your candle is waiting â try again whenever you are ready.');
         const saved = sessionStorage.getItem('lac_form');
         if (saved) {
           try {
@@ -82,11 +87,12 @@ export default function LightACandlePage() {
             setCustomerName(f.customerName || '');
             setEmail(f.email || '');
             if (f.tierLocked) setTierLocked(true);
+            if (f.accountMode) setAccountMode(f.accountMode);
             setStep(4);
           } catch {}
         }
       } else {
-        // Fresh start — clear any stale saved form data
+        // Fresh start â clear any stale saved form data
         sessionStorage.removeItem('lac_form');
       }
     }
@@ -134,6 +140,34 @@ export default function LightACandlePage() {
     if (step > 1) setStep(prevStep);
   }
 
+  // Helper: upload photo and save session state, then redirect
+  async function uploadAndRedirect(hash, checkoutUrl) {
+    if (photoFile && hash) {
+      try {
+        const fd = new FormData();
+        fd.append('hash', hash);
+        fd.append('file', photoFile);
+        await fetch('/api/upload-memorial-photo', { method: 'POST', body: fd });
+      } catch {
+        // Non-fatal â user can add photo from account later.
+      }
+    }
+    sessionStorage.setItem('lac_form', JSON.stringify({
+      lovedOneName: lovedOneName.trim(),
+      birthDate,
+      deathDate,
+      dedication: dedication.trim(),
+      tier,
+      billingInterval,
+      customerName: customerName.trim(),
+      email: email.trim(),
+      tierLocked,
+      accountMode,
+    }));
+    window.location.href = checkoutUrl;
+  }
+
+  // New account flow
   async function handleSubmit() {
     setErrorMsg('');
     if (!customerName.trim()) {
@@ -164,39 +198,106 @@ export default function LightACandlePage() {
           customerName: customerName.trim(),
           email: email.trim(),
           password,
+          isPrivate,
         }),
       });
       const data = await res.json();
 
+      if (res.status === 409) {
+        // Account already exists â switch to sign-in mode
+        setAccountMode('signin');
+        setErrorMsg('An account with this email already exists. Sign in below to continue.');
+        setSubmitting(false);
+        return;
+      }
+
       if (res.ok && data.checkoutUrl) {
-        if (photoFile && data.hash) {
-          try {
-            const fd = new FormData();
-            fd.append('hash', data.hash);
-            fd.append('file', photoFile);
-            await fetch('/api/upload-memorial-photo', { method: 'POST', body: fd });
-          } catch {
-            // Non-fatal — user can add from account later.
-          }
+        // Sign user in so the session cookie is set before Stripe redirect â
+        // this means /account will show their candles when they return.
+        try {
+          const supabase = createSupabaseBrowserClient();
+          await supabase.auth.signInWithPassword({
+            email: email.trim().toLowerCase(),
+            password,
+          });
+        } catch {
+          // Non-fatal â they can sign in manually from /account/login.
         }
-        // Save form state so we can restore it if the user comes back from Stripe
-        sessionStorage.setItem('lac_form', JSON.stringify({
-          lovedOneName: lovedOneName.trim(),
-          birthDate,
-          deathDate,
-          dedication: dedication.trim(),
-          tier,
-          billingInterval,
-          customerName: customerName.trim(),
-          email: email.trim(),
-          tierLocked,
-        }));
-        window.location.href = data.checkoutUrl;
+        await uploadAndRedirect(data.hash, data.checkoutUrl);
       } else {
         setErrorMsg(data.error || 'Something went wrong. Please try again.');
         setSubmitting(false);
       }
-    } catch (err) {
+    } catch {
+      setErrorMsg('Something went wrong. Please try again.');
+      setSubmitting(false);
+    }
+  }
+
+  // Returning user (sign-in) flow
+  async function handleSignInSubmit() {
+    setErrorMsg('');
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+    if (!password || password.length < 8) {
+      setErrorMsg('Password must be at least 8 characters.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      // Sign in client-side to get session token
+      const supabase = createSupabaseBrowserClient();
+      const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
+      });
+
+      if (signInError) {
+        setErrorMsg(
+          signInError.message?.includes('Invalid login')
+            ? 'That email and password did not match. Please try again.'
+            : 'Could not sign in. Please check your credentials and try again.'
+        );
+        setSubmitting(false);
+        return;
+      }
+
+      const accessToken = authData.session?.access_token;
+      if (!accessToken) {
+        setErrorMsg('Sign in succeeded but session was not returned. Please try again.');
+        setSubmitting(false);
+        return;
+      }
+
+      // Create memorial + Stripe checkout for existing user
+      const res = await fetch('/api/light-a-candle/returning', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          lovedOneName: lovedOneName.trim(),
+          birthDate: birthDate || null,
+          deathDate: deathDate || null,
+          dedication: dedication.trim() || null,
+          tier,
+          billingInterval,
+          isPrivate,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.checkoutUrl) {
+        await uploadAndRedirect(data.hash, data.checkoutUrl);
+      } else {
+        setErrorMsg(data.error || 'Something went wrong. Please try again.');
+        setSubmitting(false);
+      }
+    } catch {
       setErrorMsg('Something went wrong. Please try again.');
       setSubmitting(false);
     }
@@ -291,11 +392,24 @@ export default function LightACandlePage() {
               <label htmlFor="dedication">A dedication, prayer, or memory</label>
               <textarea
                 id="dedication"
-                placeholder="Anything you'd like to share. A line they used to say, a memory, a blessing — whatever feels right."
+                placeholder="Anything you'd like to share. A line they used to say, a memory, a blessing â whatever feels right."
                 value={dedication}
                 onChange={(e) => setDedication(e.target.value)}
                 rows={5}
               />
+
+              <label className="privacy-label">
+                <input
+                  type="checkbox"
+                  checked={isPrivate}
+                  onChange={(e) => setIsPrivate(e.target.checked)}
+                  className="privacy-checkbox"
+                />
+                <span>Keep this memorial private</span>
+              </label>
+              <p className="privacy-note">
+                Private memorials are only visible to you when signed in â they won't appear on the public altar.
+              </p>
             </>
           )}
 
@@ -317,7 +431,7 @@ export default function LightACandlePage() {
                   className={billingInterval === 'yearly' ? 'active' : ''}
                   onClick={() => setBillingInterval('yearly')}
                 >
-                  Yearly — Save 25%
+                  Yearly â Save 25%
                 </button>
               </div>
 
@@ -345,7 +459,7 @@ export default function LightACandlePage() {
             </>
           )}
 
-          {step === 4 && (
+          {step === 4 && accountMode === 'create' && (
             <>
               <h2>Create your account</h2>
               <p className="wizard-sub">So you can return anytime to visit, edit, or share their candle.</p>
@@ -382,6 +496,64 @@ export default function LightACandlePage() {
                 Selected: <strong>{selectedTier.name}</strong> ${price} {period.toLowerCase()}.
                 When you click below, you will be sent to a secure Stripe checkout page to enter your payment details.
               </p>
+
+              <p className="auth-switch-note">
+                Already have an account?{' '}
+                <button
+                  type="button"
+                  className="auth-switch-btn"
+                  onClick={() => { setErrorMsg(''); setAccountMode('signin'); }}
+                >
+                  Sign in instead
+                </button>
+              </p>
+            </>
+          )}
+
+          {step === 4 && accountMode === 'signin' && (
+            <>
+              <h2>Sign in to your account</h2>
+              <p className="wizard-sub">
+                Welcome back. Sign in to add a new candle to your altar.
+              </p>
+
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoFocus
+              />
+
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+
+              <p className="wizard-note">
+                Selected: <strong>{selectedTier.name}</strong> ${price} {period.toLowerCase()}.
+                You'll be sent to Stripe checkout after signing in.
+              </p>
+
+              <p className="auth-switch-note">
+                <Link href="/account/forgot-password" className="auth-switch-btn">
+                  Forgot your password?
+                </Link>
+                {' Â· '}
+                <button
+                  type="button"
+                  className="auth-switch-btn"
+                  onClick={() => { setErrorMsg(''); setAccountMode('create'); }}
+                >
+                  Create a new account instead
+                </button>
+              </p>
             </>
           )}
 
@@ -403,7 +575,7 @@ export default function LightACandlePage() {
               <button
                 type="button"
                 className="btn-cta"
-                onClick={handleSubmit}
+                onClick={accountMode === 'signin' ? handleSignInSubmit : handleSubmit}
                 disabled={submitting}
               >
                 {submitting ? 'Lighting the candle...' : 'Light the Candle'}
