@@ -16,7 +16,7 @@ const VALID_INTERVALS = new Set(['monthly', 'yearly']);
 //   1. Creates the Supabase auth user.
 //   2. Creates a 'pending' memorial owned by that user.
 //   3. Creates a Stripe Checkout session for the chosen tier + interval.
-//   4. Returns the Checkout URL — client redirects there.
+//   4. Returns the Checkout URL â client redirects there.
 //
 // After successful payment, our /api/stripe/webhook flips the memorial to 'active'.
 export async function POST(request) {
@@ -34,6 +34,7 @@ export async function POST(request) {
     const customerName = (body.customerName || '').toString().trim();
     const email = (body.email || '').toString().trim().toLowerCase();
     const password = (body.password || '').toString();
+    const isPrivate = !!body.isPrivate;
 
     // Validate required fields
     if (!lovedOneName) {
@@ -87,7 +88,7 @@ export async function POST(request) {
         return NextResponse.json(
           {
             error:
-              'An account with this email already exists. We will add a sign-in option soon — for now, please use a different email.',
+              'An account with this email already exists. Sign in below to add a new candle.',
           },
           { status: 409 }
         );
@@ -121,6 +122,7 @@ export async function POST(request) {
         dedication,
         status: 'pending',
         owner_id: ownerId,
+        is_private: isPrivate,
       });
       if (!error) {
         memorialHash = candidate;
