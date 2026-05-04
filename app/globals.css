@@ -1916,3 +1916,110 @@ a:hover { color: var(--amber-warm); }
 .auth-switch-btn:hover {
     color: var(--amber-warm);
 }
+
+
+/* ============ UPGRADE CARD ============ */
+.upgrade-card {
+  background: linear-gradient(135deg, rgba(212,160,65,0.08) 0%, rgba(139,90,43,0.06) 100%);
+  border: 1px solid rgba(212,160,65,0.25);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+}
+.upgrade-card-inner {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+@media (max-width: 600px) {
+  .upgrade-card-inner { flex-direction: column; gap: 16px; }
+}
+.upgrade-card-text { flex: 1; }
+.upgrade-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+.upgrade-card-sub {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+.upgrade-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.upgrade-features li {
+  font-size: 0.84rem;
+  color: var(--muted);
+  padding-left: 16px;
+  position: relative;
+}
+.upgrade-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--amber);
+  font-size: 0.78rem;
+}
+.upgrade-card-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .upgrade-card-action { align-items: flex-start; width: 100%; }
+}
+.upgrade-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+@media (max-width: 600px) {
+  .upgrade-price { align-items: flex-start; }
+}
+.upgrade-price-amount {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.upgrade-price-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.btn-upgrade {
+  background: var(--amber);
+  color: #0c0a08;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+.btn-upgrade:hover:not(:disabled) { opacity: 0.88; }
+.btn-upgrade:disabled { opacity: 0.55; cursor: not-allowed; }
+.upgrade-card--success {
+  background: rgba(212,160,65,0.06);
+  border-color: rgba(212,160,65,0.3);
+  padding: 20px;
+}
+.upgrade-success-msg {
+  font-size: 0.95rem;
+  color: var(--text);
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
