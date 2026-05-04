@@ -53,6 +53,96 @@ export default function AccountDashboard({ memorials, ownerId, subscription }) {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Upgrade card â shown to memorial subscribers who haven't canceled/paused
+// ---------------------------------------------------------------------------
+function UpgradeCard({ billingInterval }) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [upgraded, setUpgraded] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const familyPrice =
+    billingInterval === 'yearly' ? '$189.95 / year' : '$19.95 / month';
+  const priceDiff =
+    billingInterval === 'yearly' ? '$100 / year' : '$10 / month';
+
+  async function handleUpgrade() {
+    setErrorMsg('');
+    setLoading(true);
+    try {
+      const supabase = createSupabaseBrowserClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token;
+      if (!accessToken) {
+        throw new Error('Please refresh the page and sign in again.');
+      }
+
+      const res = await fetch('/api/account/upgrade', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || 'Upgrade failed. Please try again.');
+      }
+
+      setUpgraded(true);
+      // Reload after a moment so the billing section reflects the new plan
+      setTimeout(() => router.refresh(), 2500);
+    } catch (err) {
+      setErrorMsg(err.message || 'Something went wrong. Please try again.');
+      setLoading(false);
+    }
+  }
+
+  if (upgraded) {
+    return (
+      <div className="upgrade-card upgrade-card--success">
+        <p className="upgrade-success-msg">
+          ð¯ Welcome to the Family Altar. You can now light candles for everyone you love.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="upgrade-card">
+      <div className="upgrade-card-inner">
+        <div className="upgrade-card-text">
+          <h4 className="upgrade-card-title">Upgrade to Family Altar</h4>
+          <p className="upgrade-card-sub">
+            Honor everyone â light candles for as many loved ones as you wish.
+          </p>
+          <ul className="upgrade-features">
+            <li>Unlimited candles on the altar</li>
+            <li>Individual dedications, photos &amp; dates for each</li>
+            <li>One plan, one family, every soul remembered</li>
+          </ul>
+        </div>
+        <div className="upgrade-card-action">
+          <div className="upgrade-price">
+            <span className="upgrade-price-amount">{familyPrice}</span>
+            <span className="upgrade-price-note">just {priceDiff} more Â· prorated today</span>
+          </div>
+          {errorMsg && <p className="wizard-error">{errorMsg}</p>}
+          <button
+            type="button"
+            className="btn-upgrade"
+            onClick={handleUpgrade}
+            disabled={loading}
+          >
+            {loading ? 'Upgradingâ¦' : 'Upgrade now'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Billing section
+// ---------------------------------------------------------------------------
 function ManageBilling({ subscription }) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -80,6 +170,10 @@ function ManageBilling({ subscription }) {
   const renewalDate = subscription ? formatRenewalDate(subscription.current_period_end) : null;
   const cancelAtEnd = subscription?.cancel_at_period_end;
   const isPaused = subscription?.paused;
+
+  // Show the upgrade card for active memorial subscribers only
+  const showUpgrade =
+    subscription?.tier === 'memorial' && !isPaused && !cancelAtEnd;
 
   return (
     <div className="manage-billing">
@@ -112,6 +206,10 @@ function ManageBilling({ subscription }) {
         </p>
       )}
 
+      {showUpgrade && (
+        <UpgradeCard billingInterval={subscription.billing_interval} />
+      )}
+
       {errorMsg && <p className="wizard-error">{errorMsg}</p>}
       <button
         type="button"
@@ -119,7 +217,7 @@ function ManageBilling({ subscription }) {
         onClick={handleManageBilling}
         disabled={loading}
       >
-        {loading ? 'Opening…' : 'Manage billing'}
+        {loading ? 'Openingâ¦' : 'Manage billing'}
       </button>
     </div>
   );
@@ -244,7 +342,7 @@ function MemorialCard({ memorial, ownerId }) {
     setErrorMsg('');
     setUploading(true);
     try {
-      // Best effort — clear the DB pointer first; the file in storage can be
+      // Best effort â clear the DB pointer first; the file in storage can be
       // garbage-collected later. We don't fail the user if the file delete
       // fails because the candle no longer references it anyway.
       await persistPatch({
@@ -332,7 +430,7 @@ function MemorialCard({ memorial, ownerId }) {
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
           >
-            {uploading ? 'Uploading…' : photoUrl ? 'Replace photo' : 'Add a photo'}
+            {uploading ? 'Uploadingâ¦' : photoUrl ? 'Replace photo' : 'Add a photo'}
           </button>
           {photoUrl && !uploading && (
             <button
@@ -343,7 +441,7 @@ function MemorialCard({ memorial, ownerId }) {
               Remove
             </button>
           )}
-          <p className="photo-hint">JPG, PNG, or WebP · up to 5 MB</p>
+          <p className="photo-hint">JPG, PNG, or WebP Â· up to 5 MB</p>
         </div>
       </div>
 
@@ -390,14 +488,14 @@ function MemorialCard({ memorial, ownerId }) {
           rows={4}
           value={dedication}
           onChange={(e) => setDedication(e.target.value)}
-          placeholder="A line they used to say, a memory, a blessing — whatever feels right."
+          placeholder="A line they used to say, a memory, a blessing â whatever feels right."
         />
 
         {errorMsg && <p className="wizard-error">{errorMsg}</p>}
 
         {savedAt && !errorMsg && (
           <div className="memorial-card-saved-banner" role="status">
-            <span className="check" aria-hidden="true">✓</span>
+            <span className="check" aria-hidden="true">â</span>
             <span>Changes saved.</span>
           </div>
         )}
@@ -408,7 +506,7 @@ function MemorialCard({ memorial, ownerId }) {
             className="btn-cta"
             disabled={submitting || !dirty}
           >
-            {submitting ? 'Saving…' : 'Save changes'}
+            {submitting ? 'Savingâ¦' : 'Save changes'}
           </button>
         </div>
       </form>
