@@ -5,7 +5,7 @@ import { stripe, priceIdFor } from '@/lib/stripe';
 // POST /api/account/upgrade
 // Upgrades an existing memorial-tier subscription to family tier.
 // Requires Authorization: Bearer <access_token> header.
-// Stripe prorates the charge automatically â the customer pays only the
+// Stripe prorates the charge automatically \u2014 the customer pays only the
 // difference for the remainder of their current billing cycle.
 export async function POST(request) {
   try {
@@ -69,7 +69,7 @@ export async function POST(request) {
       );
     }
 
-    // 6) Upgrade the Stripe subscription â prorate immediately
+    // 6) Upgrade the Stripe subscription \u2014 prorate immediately
     const subItem = memorialSub.items.data[0];
     const updatedSub = await stripe.subscriptions.update(memorialSub.id, {
       items: [{ id: subItem.id, price: newPriceId }],
@@ -89,7 +89,7 @@ export async function POST(request) {
       .neq('status', 'canceled');
 
     if (dbError) {
-      // Non-fatal â Stripe is the source of truth and the webhook will sync it
+      // Non-fatal \u2014 Stripe is the source of truth and the webhook will sync it
       console.error('Supabase subscriptions update error (non-fatal):', dbError);
     }
 
