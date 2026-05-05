@@ -3,11 +3,11 @@ import { supabasePublic } from '@/lib/supabase';import SiteFooter from '../compo
 
 
 export const metadata = {
-  title: 'The Altar — Ancestors · Original Botanica',
+  title: 'The Altar \u2014 Ancestors \u00b7 Original Botanica',
   description: 'Memorial candles burning on our altar in honor of those who came before us.',
 };
 
-// Re-fetch from the DB at most every 60 seconds (ISR — Incremental Static Regeneration)
+// Re-fetch from the DB at most every 60 seconds (ISR \u2014 Incremental Static Regeneration)
 export const revalidate = 60;
 
 function yearFrom(dateStr) {
@@ -18,7 +18,7 @@ function yearFrom(dateStr) {
 function formatDates(birth, death) {
   const b = yearFrom(birth);
   const d = yearFrom(death);
-  if (b && d) return `${b} — ${d}`;
+  if (b && d) return `${b} \u2014 ${d}`;
   if (b) return `Born ${b}`;
   if (d) return `Passed ${d}`;
   return '';
