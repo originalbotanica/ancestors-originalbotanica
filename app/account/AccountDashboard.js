@@ -54,7 +54,7 @@ export default function AccountDashboard({ memorials, ownerId, subscription }) {
 }
 
 // ---------------------------------------------------------------------------
-// Upgrade card â shown to memorial subscribers who haven't canceled/paused
+// Upgrade card \u2014 shown to memorial subscribers who haven't canceled/paused
 // ---------------------------------------------------------------------------
 function UpgradeCard({ billingInterval }) {
   const router = useRouter();
@@ -100,7 +100,7 @@ function UpgradeCard({ billingInterval }) {
     return (
       <div className="upgrade-card upgrade-card--success">
         <p className="upgrade-success-msg">
-          ð¯ Welcome to the Family Altar. You can now light candles for everyone you love.
+          &#x1F56F; Welcome to the Family Altar. You can now light candles for everyone you love.
         </p>
       </div>
     );
@@ -112,7 +112,7 @@ function UpgradeCard({ billingInterval }) {
         <div className="upgrade-card-text">
           <h4 className="upgrade-card-title">Upgrade to Family Altar</h4>
           <p className="upgrade-card-sub">
-            Honor everyone â light candles for as many loved ones as you wish.
+            Honor everyone &mdash; light candles for as many loved ones as you wish.
           </p>
           <ul className="upgrade-features">
             <li>Unlimited candles on the altar</li>
@@ -123,7 +123,7 @@ function UpgradeCard({ billingInterval }) {
         <div className="upgrade-card-action">
           <div className="upgrade-price">
             <span className="upgrade-price-amount">{familyPrice}</span>
-            <span className="upgrade-price-note">just {priceDiff} more Â· prorated today</span>
+            <span className="upgrade-price-note">just {priceDiff} more &middot; prorated today</span>
           </div>
           {errorMsg && <p className="wizard-error">{errorMsg}</p>}
           <button
@@ -132,7 +132,7 @@ function UpgradeCard({ billingInterval }) {
             onClick={handleUpgrade}
             disabled={loading}
           >
-            {loading ? 'Upgradingâ¦' : 'Upgrade now'}
+            {loading ? 'Upgrading\u2026' : 'Upgrade now'}
           </button>
         </div>
       </div>
@@ -217,7 +217,7 @@ function ManageBilling({ subscription }) {
         onClick={handleManageBilling}
         disabled={loading}
       >
-        {loading ? 'Openingâ¦' : 'Manage billing'}
+        {loading ? 'Opening\u2026' : 'Manage billing'}
       </button>
     </div>
   );
@@ -342,7 +342,7 @@ function MemorialCard({ memorial, ownerId }) {
     setErrorMsg('');
     setUploading(true);
     try {
-      // Best effort â clear the DB pointer first; the file in storage can be
+      // Best effort \u2014 clear the DB pointer first; the file in storage can be
       // garbage-collected later. We don't fail the user if the file delete
       // fails because the candle no longer references it anyway.
       await persistPatch({
@@ -430,7 +430,7 @@ function MemorialCard({ memorial, ownerId }) {
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
           >
-            {uploading ? 'Uploadingâ¦' : photoUrl ? 'Replace photo' : 'Add a photo'}
+            {uploading ? 'Uploading\u2026' : photoUrl ? 'Replace photo' : 'Add a photo'}
           </button>
           {photoUrl && !uploading && (
             <button
@@ -441,7 +441,7 @@ function MemorialCard({ memorial, ownerId }) {
               Remove
             </button>
           )}
-          <p className="photo-hint">JPG, PNG, or WebP Â· up to 5 MB</p>
+          <p className="photo-hint">JPG, PNG, or WebP &middot; up to 5 MB</p>
         </div>
       </div>
 
@@ -488,14 +488,14 @@ function MemorialCard({ memorial, ownerId }) {
           rows={4}
           value={dedication}
           onChange={(e) => setDedication(e.target.value)}
-          placeholder="A line they used to say, a memory, a blessing â whatever feels right."
+          placeholder="A line they used to say, a memory, a blessing \u2014 whatever feels right."
         />
 
         {errorMsg && <p className="wizard-error">{errorMsg}</p>}
 
         {savedAt && !errorMsg && (
           <div className="memorial-card-saved-banner" role="status">
-            <span className="check" aria-hidden="true">â</span>
+            <span className="check" aria-hidden="true">&#10003;</span>
             <span>Changes saved.</span>
           </div>
         )}
@@ -506,7 +506,7 @@ function MemorialCard({ memorial, ownerId }) {
             className="btn-cta"
             disabled={submitting || !dirty}
           >
-            {submitting ? 'Savingâ¦' : 'Save changes'}
+            {submitting ? 'Saving\u2026' : 'Save changes'}
           </button>
         </div>
       </form>
