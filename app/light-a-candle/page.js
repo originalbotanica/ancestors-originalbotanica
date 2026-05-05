@@ -21,7 +21,7 @@ const TIERS = [
     monthly: '19.95',
     yearly: '189.95',
     description:
-      'A family altar of your own. Up to seven loved ones, each with their own candle, photo, and remembrances â all tended together.',
+      'A family altar of your own. Up to seven loved ones, each with their own candle, photo, and remembrances \u2014 all tended together.',
   },
 ];
 
@@ -73,7 +73,7 @@ export default function LightACandlePage() {
 
       // Handle return from Stripe checkout
       if (params.get('canceled') === '1') {
-        setErrorMsg('Checkout was cancelled. Your candle is waiting â try again whenever you are ready.');
+        setErrorMsg('Checkout was cancelled. Your candle is waiting \u2014 try again whenever you are ready.');
         const saved = sessionStorage.getItem('lac_form');
         if (saved) {
           try {
@@ -92,7 +92,7 @@ export default function LightACandlePage() {
           } catch {}
         }
       } else {
-        // Fresh start â clear any stale saved form data
+        // Fresh start \u2014 clear any stale saved form data
         sessionStorage.removeItem('lac_form');
       }
     }
@@ -149,7 +149,7 @@ export default function LightACandlePage() {
         fd.append('file', photoFile);
         await fetch('/api/upload-memorial-photo', { method: 'POST', body: fd });
       } catch {
-        // Non-fatal â user can add photo from account later.
+        // Non-fatal \u2014 user can add photo from account later.
       }
     }
     sessionStorage.setItem('lac_form', JSON.stringify({
@@ -204,7 +204,7 @@ export default function LightACandlePage() {
       const data = await res.json();
 
       if (res.status === 409) {
-        // Account already exists â switch to sign-in mode
+        // Account already exists \u2014 switch to sign-in mode
         setAccountMode('signin');
         setErrorMsg('An account with this email already exists. Sign in below to continue.');
         setSubmitting(false);
@@ -212,7 +212,7 @@ export default function LightACandlePage() {
       }
 
       if (res.ok && data.checkoutUrl) {
-        // Sign user in so the session cookie is set before Stripe redirect â
+        // Sign user in so the session cookie is set before Stripe redirect \u2014
         // this means /account will show their candles when they return.
         try {
           const supabase = createSupabaseBrowserClient();
@@ -221,7 +221,7 @@ export default function LightACandlePage() {
             password,
           });
         } catch {
-          // Non-fatal â they can sign in manually from /account/login.
+          // Non-fatal \u2014 they can sign in manually from /account/login.
         }
         await uploadAndRedirect(data.hash, data.checkoutUrl);
       } else {
@@ -392,7 +392,7 @@ export default function LightACandlePage() {
               <label htmlFor="dedication">A dedication, prayer, or memory</label>
               <textarea
                 id="dedication"
-                placeholder="Anything you'd like to share. A line they used to say, a memory, a blessing â whatever feels right."
+                placeholder="Anything you'd like to share. A line they used to say, a memory, a blessing \u2014 whatever feels right."
                 value={dedication}
                 onChange={(e) => setDedication(e.target.value)}
                 rows={5}
@@ -408,7 +408,7 @@ export default function LightACandlePage() {
                 <span>Keep this memorial private</span>
               </label>
               <p className="privacy-note">
-                Private memorials are only visible to you when signed in â they won't appear on the public altar.
+                Private memorials are only visible to you when signed in &mdash; they won't appear on the public altar.
               </p>
             </>
           )}
@@ -431,7 +431,7 @@ export default function LightACandlePage() {
                   className={billingInterval === 'yearly' ? 'active' : ''}
                   onClick={() => setBillingInterval('yearly')}
                 >
-                  Yearly â Save 25%
+                  Yearly &mdash; Save 25%
                 </button>
               </div>
 
@@ -545,7 +545,7 @@ export default function LightACandlePage() {
                 <Link href="/account/forgot-password" className="auth-switch-btn">
                   Forgot your password?
                 </Link>
-                {' Â· '}
+                {' \u00b7 '}
                 <button
                   type="button"
                   className="auth-switch-btn"
