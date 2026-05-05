@@ -13,7 +13,7 @@ function yearFrom(dateStr) {
 function formatDates(birth, death) {
   const b = yearFrom(birth);
   const d = yearFrom(death);
-  if (b && d) return `${b} — ${d}`;
+  if (b && d) return `${b} \u2014 ${d}`;
   if (b) return `Born ${b}`;
   if (d) return `Passed ${d}`;
   return '';
@@ -34,11 +34,11 @@ export async function generateMetadata({ params }) {
   const memorial = await getMemorial(hash);
 
   if (!memorial) {
-    return { title: 'Memorial — Ancestors · Original Botanica' };
+    return { title: 'Memorial \u2014 Ancestors \u00b7 Original Botanica' };
   }
 
   return {
-    title: `In memory of ${memorial.name} — Ancestors · Original Botanica`,
+    title: `In memory of ${memorial.name} \u2014 Ancestors \u00b7 Original Botanica`,
     description:
       memorial.dedication?.slice(0, 200) ||
       `A perpetual candle burning in memory of ${memorial.name}.`,
