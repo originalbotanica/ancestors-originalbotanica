@@ -16,7 +16,7 @@ const VALID_INTERVALS = new Set(['monthly', 'yearly']);
 //   1. Creates the Supabase auth user.
 //   2. Creates a 'pending' memorial owned by that user.
 //   3. Creates a Stripe Checkout session for the chosen tier + interval.
-//   4. Returns the Checkout URL â client redirects there.
+//   4. Returns the Checkout URL \u2014 client redirects there.
 //
 // After successful payment, our /api/stripe/webhook flips the memorial to 'active'.
 export async function POST(request) {
