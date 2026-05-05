@@ -2,7 +2,7 @@ import Link from 'next/link';
 import SiteFooter from '../components/SiteFooter';
 
 export const metadata = {
-      title: 'Terms of Service — Ancestors · Original Botanica',
+      title: 'Terms of Service \u2014 Ancestors \u00b7 Original Botanica',
 };
 
 export default function TermsPage() {
@@ -39,7 +39,7 @@ export default function TermsPage() {
               <p>
                                 Access to the service requires a paid subscription. We offer two plans: Memorial
                 Candle (one candle for one loved one) and Family Altar (up to seven loved ones on
-                one altar). Subscriptions renew automatically at the end of each billing period —
+                one altar). Subscriptions renew automatically at the end of each billing period &mdash;
                 monthly or annually, whichever you choose.
                     </p>
               <p>
