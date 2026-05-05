@@ -14,9 +14,9 @@ export default function ResetPasswordPage() {
   const [ready, setReady] = useState(false);
 
   // Supabase's reset email may land the user here in any of three ways:
-  //   1. Modern PKCE flow with ?code=... → we exchange the code for a session
-  //   2. Through /auth/callback which already exchanged the code → session cookie present
-  //   3. Legacy hash-based flow with #access_token=... → browser client auto-handles it
+  //   1. Modern PKCE flow with ?code=... \u2192 we exchange the code for a session
+  //   2. Through /auth/callback which already exchanged the code \u2192 session cookie present
+  //   3. Legacy hash-based flow with #access_token=... \u2192 browser client auto-handles it
   // We only render the form once a real session is in hand. Without one,
   // updateUser({ password }) would fail with "Auth session missing".
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function ResetPasswordPage() {
       }
     });
 
-    // Path 1: ?code=... is in the URL → exchange it
+    // Path 1: ?code=... is in the URL \u2192 exchange it
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     if (code) {
@@ -122,7 +122,7 @@ export default function ResetPasswordPage() {
           <p className="wizard-sub">Choose a password you&rsquo;ll remember.</p>
 
           {!ready ? (
-            <p className="wizard-note">Verifying your reset link…</p>
+            <p className="wizard-note">Verifying your reset link&hellip;</p>
           ) : (
             <form onSubmit={handleSubmit}>
               <label htmlFor="password">New password</label>
@@ -150,7 +150,7 @@ export default function ResetPasswordPage() {
               <div className="wizard-nav">
                 <span />
                 <button type="submit" className="btn-cta" disabled={submitting}>
-                  {submitting ? 'Saving…' : 'Save new password'}
+                  {submitting ? 'Saving\u2026' : 'Save new password'}
                 </button>
               </div>
             </form>
@@ -159,9 +159,9 @@ export default function ResetPasswordPage() {
       </main>
 
       <footer className="site-footer">
-        <p>Original Botanica &nbsp;·&nbsp; The Bronx, NY &nbsp;·&nbsp; Family-owned since 1959</p>
+        <p>Original Botanica &nbsp;&middot;&nbsp; The Bronx, NY &nbsp;&middot;&nbsp; Family-owned since 1959</p>
         <div className="links">
-          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;·&nbsp;{' '}
+          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;&middot;&nbsp;{' '}
           <a href="https://altar.originalbotanica.com">altar.originalbotanica.com</a>
         </div>
       </footer>
