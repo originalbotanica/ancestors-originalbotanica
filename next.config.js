@@ -14,7 +14,8 @@ const securityHeaders = [
         value: [
                 "default-src 'self'",
                 "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
-                "style-src 'self' 'unsafe-inline'",
+                "style-src 'self' 'unsafe-inline' https://use.typekit.net https://fonts.googleapis.com",
+                "font-src 'self' https://use.typekit.net https://fonts.gstatic.com",
                 "img-src 'self' data: blob: https://*.supabase.co",
                 "connect-src 'self' https://*.supabase.co https://api.stripe.com",
                 "frame-src https://js.stripe.com",
