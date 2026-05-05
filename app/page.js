@@ -3,7 +3,7 @@ import SiteFooter from './components/SiteFooter';
 import { supabasePublic } from '@/lib/supabase';
 
 export const metadata = {
-  title: 'Ancestor Altar — Original Botanica',
+  title: 'Ancestor Altar \u2014 Original Botanica',
   description:
     'A perpetual virtual altar to honor a loved one who has passed. Keep their flame burning always.',
 };
@@ -18,7 +18,7 @@ function yearFrom(dateStr) {
 function formatDates(birth, death) {
   const b = yearFrom(birth);
   const d = yearFrom(death);
-  if (b && d) return `${b} — ${d}`;
+  if (b && d) return `${b} \u2014 ${d}`;
   if (d) return `Passed ${d}`;
   if (b) return `Born ${b}`;
   return '';
@@ -34,7 +34,7 @@ export default async function Home() {
 
   return (
     <>
-      {/* ── Header ───────────────────────────────────────── */}
+      {/* \u2500\u2500 Header \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */}
       <header className="site-header lp-header">
         <Link href="/" className="brand-logo-link" aria-label="Home">
           <div className="brand-logo">
@@ -52,7 +52,7 @@ export default async function Home() {
       </header>
 
       <main>
-        {/* ── Hero ─────────────────────────────────────────── */}
+        {/* \u2500\u2500 Hero \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */}
         <section className="lp-hero">
           <div className="lp-hero-candle">
             <div className="candle-wrapper is-lit">
@@ -88,7 +88,7 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── How It Works ─────────────────────────────────── */}
+        {/* \u2500\u2500 How It Works \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */}
         <section className="lp-section lp-how" id="how-it-works">
           <div className="lp-inner">
             <h2 className="lp-section-title">How it works</h2>
@@ -101,21 +101,21 @@ export default async function Home() {
                   a personal dedication.
                 </p>
               </div>
-              <div className="lp-step-arrow" aria-hidden="true">→</div>
+              <div className="lp-step-arrow" aria-hidden="true">&rarr;</div>
               <div className="lp-step">
                 <div className="lp-step-num">2</div>
                 <h3>Light the candle</h3>
                 <p>
-                  Your candle is placed on the ancestor altar — visible to anyone you share
+                  Your candle is placed on the ancestor altar &mdash; visible to anyone you share
                   the link with.
                 </p>
               </div>
-              <div className="lp-step-arrow" aria-hidden="true">→</div>
+              <div className="lp-step-arrow" aria-hidden="true">&rarr;</div>
               <div className="lp-step">
                 <div className="lp-step-num">3</div>
                 <h3>The flame burns on</h3>
                 <p>
-                  As long as your subscription is active, the candle stays lit — day and
+                  As long as your subscription is active, the candle stays lit &mdash; day and
                   night, without interruption.
                 </p>
               </div>
@@ -123,7 +123,7 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── Altar Preview ────────────────────────────────── */}
+        {/* \u2500\u2500 Altar Preview \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */}
         {previews && previews.length > 0 && (
           <section className="lp-section lp-preview">
             <div className="lp-inner">
@@ -161,13 +161,13 @@ export default async function Home() {
                 ))}
               </div>
               <div className="lp-preview-link">
-                <Link href="/altar">Visit the altar →</Link>
+                <Link href="/altar">Visit the altar &rarr;</Link>
               </div>
             </div>
           </section>
         )}
 
-        {/* ── Plans ────────────────────────────────────────── */}
+        {/* \u2500\u2500 Plans \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */}
         <section className="lp-section lp-plans" id="plans">
           <div className="lp-inner">
             <h2 className="lp-section-title">Choose your plan</h2>
@@ -221,7 +221,7 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── The Story ────────────────────────────────────── */}
+        {/* \u2500\u2500 The Story \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */}
         <section className="lp-section lp-story">
           <div className="lp-inner lp-story-inner">
             <div className="lp-story-logo">
@@ -232,7 +232,7 @@ export default async function Home() {
               <p>
                 Original Botanica has been a place of spiritual refuge in the Bronx for over
                 65 years. We&rsquo;ve carried candles, herbs, sacred tools, and the wisdom to
-                use them — serving our community through every kind of joy and grief. Ancestors
+                use them &mdash; serving our community through every kind of joy and grief. Ancestors
                 was built from that same calling: to help people honor those they&rsquo;ve
                 lost, in a way that is permanent, beautiful, and true.
               </p>
@@ -242,13 +242,13 @@ export default async function Home() {
                 rel="noopener noreferrer"
                 className="btn-ghost"
               >
-                Visit Original Botanica →
+                Visit Original Botanica &rarr;
               </a>
             </div>
           </div>
         </section>
 
-        {/* ── FAQ ──────────────────────────────────────────── */}
+        {/* \u2500\u2500 FAQ \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */}
         <section className="lp-section lp-faq" id="faq">
           <div className="lp-inner">
             <h2 className="lp-section-title">Questions</h2>
@@ -256,7 +256,7 @@ export default async function Home() {
               <div className="lp-faq-item">
                 <h3>What exactly is a virtual altar?</h3>
                 <p>
-                  A virtual altar is a living memorial — a candle that burns continuously
+                  A virtual altar is a living memorial &mdash; a candle that burns continuously
                   online, accompanied by a photo, name, and dedication for someone who has
                   passed. It&rsquo;s a place you can return to, share with family, and know
                   is always lit.
@@ -267,14 +267,14 @@ export default async function Home() {
                 <p>
                   No. Ancestors welcomes anyone honoring a loved one who has passed,
                   regardless of faith or background. The altar draws from the traditions of
-                  Original Botanica — Santería, Hoodoo, Spiritism, folk Catholicism — but
+                  Original Botanica &mdash; Santer&iacute;a, Hoodoo, Spiritism, folk Catholicism &mdash; but
                   the practice of remembering the dead is universal.
                 </p>
               </div>
               <div className="lp-faq-item">
                 <h3>Who can see the altar?</h3>
                 <p>
-                  The ancestor altar is public — anyone can visit and witness the candles
+                  The ancestor altar is public &mdash; anyone can visit and witness the candles
                   burning. Each candle also has its own shareable link you can send directly
                   to family and friends.
                 </p>
@@ -290,7 +290,7 @@ export default async function Home() {
               <div className="lp-faq-item">
                 <h3>Can I honor more than one person?</h3>
                 <p>
-                  Yes — the Family Altar plan lets you light up to seven candles under one
+                  Yes &mdash; the Family Altar plan lets you light up to seven candles under one
                   subscription, so your whole family can rest together on the altar.
                 </p>
               </div>
@@ -298,7 +298,7 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── Closing CTA ──────────────────────────────────── */}
+        {/* \u2500\u2500 Closing CTA \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */}
         <section className="lp-closing">
           <div className="lp-inner lp-closing-inner">
             <div className="lp-closing-candle">
@@ -313,7 +313,7 @@ export default async function Home() {
                 <div className="flame-light-cast"></div>
               </div>
               <img src="/white-candle.png" alt="A prayer candle" />
-            </div>
+  #         </div>
             </div>
             <h2>Keep their flame burning.</h2>
             <p>Light a candle today. It takes less than five minutes to set up.</p>
