@@ -1,11 +1,11 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Ancestors — Original Botanica · Coming soon',
+  title: 'Ancestors \u2014 Original Botanica',
   description:
-    'A perpetual virtual altar to honor those who came before us. From Original Botanica in the Bronx, since 1959. Coming soon.',
+    'A perpetual virtual altar to honor those who came before us. From Original Botanica in the Bronx, since 1959.',
   openGraph: {
-    title: 'Ancestors — Original Botanica',
+    title: 'Ancestors \u2014 Original Botanica',
     description:
       'A flame that never goes out for those we never forget. A perpetual virtual altar from Original Botanica.',
     url: 'https://ancestors.originalbotanica.com',
@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* Brand fonts — same as originalbotanica.com */}
+        {/* Brand fonts \u2014 same as originalbotanica.com */}
         <link rel="stylesheet" href="https://use.typekit.net/xvx5ipz.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
