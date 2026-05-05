@@ -33,7 +33,7 @@ export default function LoginPage() {
       return;
     }
 
-    // Cookies are set — push to the dashboard and refresh so server components see the new session.
+    // Cookies are set \u2014 push to the dashboard and refresh so server components see the new session.
     router.push('/account');
     router.refresh();
   }
@@ -81,7 +81,7 @@ export default function LoginPage() {
                 Forgot password?
               </Link>
               <button type="submit" className="btn-cta" disabled={submitting}>
-                {submitting ? 'Signing in…' : 'Sign in'}
+                {submitting ? 'Signing in\u2026' : 'Sign in'}
               </button>
             </div>
           </form>
@@ -93,9 +93,9 @@ export default function LoginPage() {
       </main>
 
       <footer className="site-footer">
-        <p>Original Botanica &nbsp;·&nbsp; The Bronx, NY &nbsp;·&nbsp; Family-owned since 1959</p>
+        <p>Original Botanica &nbsp;&middot;&nbsp; The Bronx, NY &nbsp;&middot;&nbsp; Family-owned since 1959</p>
         <div className="links">
-          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;·&nbsp;{' '}
+          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;&middot;&nbsp;{' '}
           <a href="https://altar.originalbotanica.com">altar.originalbotanica.com</a>
         </div>
       </footer>
