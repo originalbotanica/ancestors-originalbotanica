@@ -7,7 +7,7 @@ import SiteFooter from '../components/SiteFooter';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-    title: 'My Account — Ancestors · Original Botanica',
+    title: 'My Account \u2014 Ancestors \u00b7 Original Botanica',
 };
 
 export default async function AccountPage() {
@@ -19,8 +19,8 @@ export default async function AccountPage() {
   if (!user) redirect('/account/login');
 
   // /account shows only the candles the signed-in user actually owns. Note:
-  // the SELECT RLS policy is more permissive than UPDATE — public-read of active
-  // memorials lets the altar page work for everyone — so we have to filter
+  // the SELECT RLS policy is more permissive than UPDATE \u2014 public-read of active
+  // memorials lets the altar page work for everyone \u2014 so we have to filter
   // explicitly by owner_id here, otherwise the dashboard would show seed
   // candles and other customers' active memorials that the user can't edit.
   const { data: memorials, error } = await supabase
@@ -34,7 +34,7 @@ export default async function AccountPage() {
   }
 
   // Fetch the user's active subscription so we can display plan info in the
-  // billing section. Exclude canceled subscriptions — if one exists we show
+  // billing section. Exclude canceled subscriptions \u2014 if one exists we show
   // nothing rather than stale plan data.
   const { data: subscription } = await supabase
       .from('subscriptions')
