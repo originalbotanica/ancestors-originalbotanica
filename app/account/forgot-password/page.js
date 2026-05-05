@@ -88,7 +88,7 @@ export default function ForgotPasswordPage() {
                     Back
                   </Link>
                   <button type="submit" className="btn-cta" disabled={submitting}>
-                    {submitting ? 'Sending…' : 'Send reset link'}
+                    {submitting ? 'Sending\u2026' : 'Send reset link'}
                   </button>
                 </div>
               </form>
@@ -98,9 +98,9 @@ export default function ForgotPasswordPage() {
       </main>
 
       <footer className="site-footer">
-        <p>Original Botanica &nbsp;·&nbsp; The Bronx, NY &nbsp;·&nbsp; Family-owned since 1959</p>
+        <p>Original Botanica &nbsp;&middot;&nbsp; The Bronx, NY &nbsp;&middot;&nbsp; Family-owned since 1959</p>
         <div className="links">
-          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;·&nbsp;{' '}
+          <a href="https://originalbotanica.com">originalbotanica.com</a> &nbsp;&middot;&nbsp;{' '}
           <a href="https://altar.originalbotanica.com">altar.originalbotanica.com</a>
         </div>
       </footer>
