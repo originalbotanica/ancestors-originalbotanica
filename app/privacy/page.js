@@ -2,7 +2,7 @@ import Link from 'next/link';
 import SiteFooter from '../components/SiteFooter';
 
 export const metadata = {
-      title: 'Privacy Policy — Ancestors · Original Botanica',
+      title: 'Privacy Policy \u2014 Ancestors \u00b7 Original Botanica',
 };
 
 export default function PrivacyPage() {
@@ -33,11 +33,11 @@ export default function PrivacyPage() {
               <ul>
                                 <li>Your name and email address</li>
                 <li>
-                                  Information about your loved one — name, dates, a dedication, and a photo —
+                                  Information about your loved one &mdash; name, dates, a dedication, and a photo &mdash;
                   that you choose to provide
                       </li>
                 <li>
-                                    Payment information — this is handled entirely by Stripe. We never see or store
+                                    Payment information &mdash; this is handled entirely by Stripe. We never see or store
                   your card number
                       </li>
                 <li>Basic usage data, such as which pages you visit and when you log in</li>
@@ -59,13 +59,13 @@ export default function PrivacyPage() {
                 </p>
               <ul>
                                 <li>
-                                  <strong>Stripe</strong> — payment processing.{' '}
+                                  <strong>Stripe</strong> &mdash; payment processing.{' '}
                   <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer">
                                     stripe.com/privacy
                     </a>
                     </li>
                 <li>
-                                  <strong>Supabase</strong> — database and file storage, hosted in the United
+                                  <strong>Supabase</strong> &mdash; database and file storage, hosted in the United
                   States
                       </li>
                       </ul>
