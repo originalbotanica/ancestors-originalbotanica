@@ -2290,3 +2290,8 @@ a:hover { color: var(--amber-warm); }
   }
   .hamburger-btn:hover span { background: var(--amber); }
 }
+
+
+/* ── Hamburger drawer links: amber color ── */
+.hamburger-links > a { color: var(--amber); }
+.hamburger-links > a:hover { color: var(--amber-warm); }
