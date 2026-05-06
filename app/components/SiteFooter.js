@@ -15,7 +15,7 @@ export default function SiteFooter() {
           <a href="https://www.originalbotanica.com" target="_blank" rel="noopener noreferrer">BUY SPIRITUAL PRODUCTS</a>
           <Link href="/account">MY ACCOUNT</Link>
         </nav>
-        <p className="site-footer-copy">Copyright &#169; 2026 Original Products. All Rights Reserved. originalbotanica.com</p>
+        <p className="site-footer-copy">Copyright &#169; 2026 Original Botanica. All Rights Reserved. originalbotanica.com</p>
       </div>
     </footer>
   );
