@@ -10,6 +10,7 @@ export const metadata = {
       'A flame that never goes out for those we never forget. A perpetual virtual altar from Original Botanica.',
     url: 'https://ancestors.originalbotanica.com',
     type: 'website',
+    images: [{ url: 'https://dlkhclkmyx18n.cloudfront.net/Banners/original-botanica.png' }],
   },
 };
 
