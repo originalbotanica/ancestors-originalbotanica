@@ -253,47 +253,47 @@ export default async function Home() {
           <div className="lp-inner">
             <h2 className="lp-section-title">Questions</h2>
             <div className="lp-faq-list">
-              <div className="lp-faq-item">
-                <h3>What exactly is a virtual altar?</h3>
+              <details className="lp-faq-item">
+                <summary>What exactly is a virtual altar?</summary>
                 <p>
                   A virtual altar is a living memorial &mdash; a candle that burns continuously
                   online, accompanied by a photo, name, and dedication for someone who has
                   passed. It&rsquo;s a place you can return to, share with family, and know
                   is always lit.
                 </p>
-              </div>
-              <div className="lp-faq-item">
-                <h3>Is this connected to a particular religion or tradition?</h3>
+              </details>
+              <details className="lp-faq-item">
+                <summary>Is this connected to a particular religion or tradition?</summary>
                 <p>
                   No. Ancestors welcomes anyone honoring a loved one who has passed,
                   regardless of faith or background. The altar draws from the traditions of
                   Original Botanica &mdash; Santer&iacute;a, Hoodoo, Spiritism, folk Catholicism &mdash; but
                   the practice of remembering the dead is universal.
                 </p>
-              </div>
-              <div className="lp-faq-item">
-                <h3>Who can see the altar?</h3>
+              </details>
+              <details className="lp-faq-item">
+                <summary>Who can see the altar?</summary>
                 <p>
                   The ancestor altar is public &mdash; anyone can visit and witness the candles
                   burning. Each candle also has its own shareable link you can send directly
                   to family and friends.
                 </p>
-              </div>
-              <div className="lp-faq-item">
-                <h3>What happens if I cancel?</h3>
+              </details>
+              <details className="lp-faq-item">
+                <summary>What happens if I cancel?</summary>
                 <p>
                   You can cancel anytime from your account. Your candle will remain lit
                   through the end of the period you&rsquo;ve already paid for. After that, it
                   will be removed from the altar.
                 </p>
-              </div>
-              <div className="lp-faq-item">
-                <h3>Can I honor more than one person?</h3>
+              </details>
+              <details className="lp-faq-item">
+                <summary>Can I honor more than one person?</summary>
                 <p>
                   Yes &mdash; the Family Altar plan lets you light up to seven candles under one
                   subscription, so your whole family can rest together on the altar.
                 </p>
-              </div>
+              </details>
             </div>
           </div>
         </section>
