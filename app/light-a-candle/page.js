@@ -396,7 +396,7 @@ export default function LightACandlePage() {
               <label htmlFor="dedication">A dedication, prayer, or memory</label>
               <textarea
                 id="dedication"
-                placeholder="Anything you'd like to share. A line they used to say, a memory, a blessing — whatever feels right."
+                placeholder="Anything you'd like to share. A line they used to say, a memory, a blessing or whatever feels right."
                 value={dedication}
                 onChange={(e) => setDedication(e.target.value)}
                 rows={5}
