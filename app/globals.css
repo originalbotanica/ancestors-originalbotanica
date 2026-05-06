@@ -302,14 +302,25 @@ a:hover { color: var(--amber-warm); }
   font-size: 1rem; margin-bottom: 1.5rem;
 }
 .wizard-progress {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.6rem; margin-bottom: 2rem;
+}
+.wizard-step-label {
+  font-family: "brandon-grotesque", sans-serif;
+  font-size: 0.72rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted);
+}
+.wizard-dots {
   display: flex; gap: 0.5rem; justify-content: center;
-  margin-bottom: 2rem;
 }
 .wizard-progress .dot {
   width: 8px; height: 8px; border-radius: 50%;
   background: var(--line); transition: background .2s;
 }
 .wizard-progress .dot.active { background: var(--amber); }
+.required-mark {
+  color: var(--amber); margin-left: 2px;
+}
 .wizard label {
   display: block;
   font-family: "brandon-grotesque", sans-serif;
