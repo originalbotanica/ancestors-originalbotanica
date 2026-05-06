@@ -25,8 +25,8 @@ export default function HamburgerNav() {
           &times;
         </button>
         <div className="hamburger-links">
-          <a href="https://www.originalbotanica.com" target="_blank" rel="noopener noreferrer" onClick={close}>Buy Spiritual Products</a>
           <Link href="/account" onClick={close}>My Account</Link>
+          <a href="https://www.originalbotanica.com" target="_blank" rel="noopener noreferrer" onClick={close}>Buy Spiritual Products</a>
         </div>
         <div className="hamburger-footer">
           <p>Original Botanica &mdash; the Bronx, since 1959</p>
