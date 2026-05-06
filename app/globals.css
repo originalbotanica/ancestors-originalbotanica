@@ -1531,7 +1531,7 @@ a:hover { color: var(--amber-warm); }
    This photo sits centered on the candle body, slightly below mid-height. */
 .candle-photo-overlay {
   position: absolute;
-  top: 52%;
+  top: 28%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 62px;
