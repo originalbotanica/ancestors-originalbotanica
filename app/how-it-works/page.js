@@ -1,8 +1,8 @@
 import SiteFooter from '../components/SiteFooter';
 
 export const metadata = {
-  title: 'How It Works - Ancestors - Original Botanica',
-  description: 'Learn how to honor your ancestors on the Original Botanica Ancestor Altar.',
+  title: 'How It Works — Ancestors · Original Botanica',
+  description: 'Learn how Ancestors works — a perpetual virtual memorial candle from Original Botanica in the Bronx.',
 };
 
 export default function HowItWorksPage() {
