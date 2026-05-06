@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SiteFooter from './components/SiteFooter';
+import HamburgerNav from './components/HamburgerNav';
 import { supabasePublic } from '@/lib/supabase';
 
 export const metadata = {
@@ -46,9 +47,8 @@ export default async function Home() {
           <Link href="/altar">The Altar</Link>
           <Link href="/how-it-works">How It Works</Link>
           <Link href="/light-a-candle" className="lp-nav-cta">Light a Candle</Link>
-          <a href="https://www.originalbotanica.com" target="_blank" rel="noopener noreferrer">Buy Spiritual Products</a>
-          <Link href="/account" className="lp-nav-account">My Account</Link>
         </nav>
+        <HamburgerNav />
       </header>
 
       <main>
