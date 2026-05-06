@@ -13,7 +13,7 @@ const TIERS = [
     monthly: '9.95',
     yearly: '89.95',
     description:
-      'One perpetual candle for one loved one. Photo, dates, dedication, and quiet remembrances on the days that matter.',
+      'A candle that never goes out — tended on our altar for one loved one, month after month, for as long as you choose. Personalize with their photo, dates, and a dedication.',
   },
   {
     id: 'family',
@@ -21,7 +21,7 @@ const TIERS = [
     monthly: '19.95',
     yearly: '189.95',
     description:
-      'A family altar of your own. Up to seven loved ones, each with their own candle, photo, and remembrances \u2014 all tended together.',
+      'A family altar of your own. Up to seven loved ones, each with their own candle, photo, and remembrances. All tended together.',
   },
 ];
 
