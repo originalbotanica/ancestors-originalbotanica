@@ -50,6 +50,7 @@ export async function generateMetadata({ params }) {
       description,
       url: `https://ancestors.originalbotanica.com/candle/${hash}`,
       type: 'website',
+      images: [{ url: 'https://dlkhclkmyx18n.cloudfront.net/Banners/original-botanica.png' }],
     },
   };
 }
