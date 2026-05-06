@@ -1346,8 +1346,9 @@ a:hover { color: var(--amber-warm); }
 
 /* ── Responsive tweaks ──────────────────────────────── */
 @media (max-width: 720px) {
-  .lp-header { padding: 1rem 1.25rem; }
-  .lp-nav > a { display: none; }
+  .lp-header { flex-direction: column; gap: 1rem; padding: 1rem 1.25rem; align-items: center; }
+  .lp-nav { flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.25rem; }
+  .lp-nav > a { font-size: 0.78rem; letter-spacing: 0.1em; }
   .lp-section { padding: 3.5rem 0; }
   .lp-hero { min-height: auto; padding: 3rem 1.25rem 4rem; }
   .lp-plan-cards { grid-template-columns: 1fr; max-width: 380px; }
