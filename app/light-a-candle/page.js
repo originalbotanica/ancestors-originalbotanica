@@ -323,17 +323,20 @@ export default function LightACandlePage() {
 
       <main className="wizard-main">
         <div className="wizard">
-          <div className="wizard-progress" aria-label={`Step ${displayStep} of ${totalSteps}`}>
-            {[1, 2, 3, 4].filter((n) => !tierLocked || n !== 3).map((n) => (
-              <div key={n} className={`dot ${n <= step ? 'active' : ''}`} />
-            ))}
+          <div className="wizard-progress">
+            <div className="wizard-step-label">Step {displayStep} of {totalSteps}</div>
+            <div className="wizard-dots" aria-label={`Step ${displayStep} of ${totalSteps}`}>
+              {[1, 2, 3, 4].filter((n) => !tierLocked || n !== 3).map((n) => (
+                <div key={n} className={`dot ${n <= step ? 'active' : ''}`} />
+              ))}
+            </div>
           </div>
 
           {step === 1 && (
             <>
               <h2>Who are you remembering?</h2>
               <p className="wizard-sub">This is the name that will appear beneath their candle.</p>
-              <label htmlFor="lovedOneName">Their full name</label>
+              <label htmlFor="lovedOneName">Their full name <span className="required-mark" aria-hidden="true">*</span></label>
               <input
                 id="lovedOneName"
                 type="text"
@@ -341,6 +344,7 @@ export default function LightACandlePage() {
                 value={lovedOneName}
                 onChange={(e) => setLovedOneName(e.target.value)}
                 autoFocus
+                required
               />
               <label htmlFor="birthDate">
                 Birthday <span className="optional">(optional)</span>
