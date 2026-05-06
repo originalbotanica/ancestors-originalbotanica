@@ -37,11 +37,20 @@ export async function generateMetadata({ params }) {
     return { title: 'Memorial \u2014 Ancestors \u00b7 Original Botanica' };
   }
 
+  const title = `In memory of ${memorial.name} \u2014 Ancestors \u00b7 Original Botanica`;
+  const description =
+    memorial.dedication?.slice(0, 200) ||
+    `A perpetual candle burning in memory of ${memorial.name}.`;
+
   return {
-    title: `In memory of ${memorial.name} \u2014 Ancestors \u00b7 Original Botanica`,
-    description:
-      memorial.dedication?.slice(0, 200) ||
-      `A perpetual candle burning in memory of ${memorial.name}.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://ancestors.originalbotanica.com/candle/${hash}`,
+      type: 'website',
+    },
   };
 }
 
