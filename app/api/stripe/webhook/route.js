@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase';
+import { Resend } from 'resend';
 
 // Stripe needs the raw request body to verify the webhook signature.
 // We read the body as text and let Stripe parse it.
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // POST /api/stripe/webhook
 // Stripe calls this whenever a subscription event happens.
@@ -42,6 +45,77 @@ export async function POST(request) {
           .from('memorials')
           .update({ status: 'active' })
           .eq('hash', memorialHash);
+
+        // Send confirmation email to the customer.
+        const customerEmail = session.customer_details?.email || session.customer_email;
+        if (customerEmail) {
+          try {
+            const { data: memorial } = await supabaseAdmin
+              .from('memorials')
+              .select('name')
+              .eq('hash', memorialHash)
+              .maybeSingle();
+
+            if (memorial?.name) {
+              const siteUrl =
+                process.env.NEXT_PUBLIC_SITE_URL || 'https://ancestor.originalbotanica.com';
+              const candleUrl = `${siteUrl}/candle/${memorialHash}`;
+              await resend.emails.send({
+                from: 'Original Botanica Ancestor Altar <altar@originalbotanica.com>',
+                to: [customerEmail],
+                subject: `Your candle for ${memorial.name} is lit`,
+                html: `
+                  <!DOCTYPE html>
+                  <html>
+                  <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  </head>
+                  <body style="margin:0;padding:0;background:#0e0b08;font-family:Georgia,serif;">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background:#0e0b08;padding:40px 20px;">
+                      <tr>
+                        <td align="center">
+                          <table width="100%" style="max-width:520px;background:#1a1410;border-radius:12px;overflow:hidden;">
+                            <tr>
+                              <td style="background:linear-gradient(135deg,#1a1410 0%,#2a1f0e 100%);padding:40px 32px 32px;text-align:center;border-bottom:1px solid rgba(193,125,60,0.2);">
+                                <p style="margin:0 0 8px;color:#c17d3c;font-size:13px;letter-spacing:2px;text-transform:uppercase;">Original Botanica</p>
+                                <h1 style="margin:0;color:#f5e6c8;font-size:26px;font-weight:400;line-height:1.3;">A candle burns for ${memorial.name}</h1>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="padding:32px;color:#d4c4a0;font-size:16px;line-height:1.7;">
+                                <p style="margin:0 0 20px;">Your candle has been lit on the Original Botanica Ancestor Altar. The sacred flame holds space for ${memorial.name} and carries your intentions forward.</p>
+                                <p style="margin:0 0 28px;">This light burns as a bridge between worlds — honoring those who came before and the love that never fades.</p>
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td align="center">
+                                      <a href="${candleUrl}" style="display:inline-block;background:#c17d3c;color:#fff;text-decoration:none;padding:14px 32px;border-radius:6px;font-size:15px;letter-spacing:0.5px;">View Your Candle</a>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="padding:20px 32px 32px;border-top:1px solid rgba(193,125,60,0.15);text-align:center;">
+                                <p style="margin:0;color:#7a6a50;font-size:13px;line-height:1.6;">
+                                  Original Botanica &middot; Family-owned since 1959 &middot; The Bronx, New York<br>
+                                  <a href="https://originalbotanica.com" style="color:#c17d3c;text-decoration:none;">originalbotanica.com</a>
+                                </p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </body>
+                  </html>
+                `,
+              });
+            }
+          } catch (emailErr) {
+            console.error('Confirmation email error (non-fatal):', emailErr);
+          }
+        }
 
         // Upsert subscription record.
         if (subscriptionId) {
@@ -109,7 +183,6 @@ export async function POST(request) {
 
       case 'invoice.payment_failed': {
         // Stripe handles smart retries automatically — we just log this for now.
-        // Phase 6 will send the customer a "card declined" email via Mailchimp Transactional.
         const invoice = event.data.object;
         console.log('Invoice payment failed:', invoice.id, 'subscription:', invoice.subscription);
         break;
