@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { supabasePublic } from '@/lib/supabase';
 import SiteFooter from '../../components/SiteFooter';
+import ShareButton from '../../components/ShareButton';
 
 export const revalidate = 60;
 
@@ -111,6 +112,7 @@ export default async function CandlePage({ params }) {
 
         <div className="memorial-actions">
           <Link href="/altar" className="btn-secondary">Back to the Altar</Link>
+          <ShareButton name={memorial.name} />
         </div>
       </main>
 
