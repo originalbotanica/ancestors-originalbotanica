@@ -47,6 +47,8 @@ export default async function Home() {
           <Link href="/altar">The Altar</Link>
           <Link href="/how-it-works">How It Works</Link>
           <Link href="/light-a-candle" className="lp-nav-cta">Light a Candle</Link>
+          <Link href="/account" className="lp-nav-account">My Account</Link>
+          <a href="https://www.originalbotanica.com" target="_blank" rel="noopener noreferrer" className="lp-nav-account">Buy Spiritual Products</a>
         </nav>
         <HamburgerNav />
       </header>
