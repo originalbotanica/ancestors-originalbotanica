@@ -2040,3 +2040,30 @@ a:hover { color: var(--amber-warm); }
   margin: 0;
   line-height: 1.5;
 }
+
+/* ── Share button ── */
+.btn-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.4rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--muted);
+    font-family: "brandon-grotesque", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+.btn-share:hover {
+    border-color: var(--amber);
+    color: var(--amber);
+}
+.btn-share:active {
+    opacity: 0.8;
+}
