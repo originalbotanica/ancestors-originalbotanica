@@ -1367,111 +1367,109 @@ a:hover { color: var(--amber-warm); }
   bottom: calc(100% - 38px);
   left: 50%;
   transform: translateX(-50%);
-  width: 56px;
-  height: 112px;
+  width: 24px;
+  height: 46px;
   pointer-events: none;
   margin-bottom: 0;
 }
 
-/* Soft warm glow behind the whole flame */
+/* Soft warm glow */
 .flame-halo {
   position: absolute;
-  bottom: 0;
-  left: 50%;
+  bottom: 0; left: 50%;
   transform: translateX(-50%);
-  width: 88px;
-  height: 88px;
+  width: 42px; height: 42px;
   border-radius: 50%;
   background: radial-gradient(ellipse at 50% 65%, rgba(255,195,55,0.22) 0%, rgba(255,110,0,0.09) 48%, transparent 73%);
   animation: flame-halo-breathe 2.4s ease-in-out infinite alternate;
 }
-/* Outermost orange layer — sets the overall teardrop silhouette */
+/* Outer orange silhouette */
 .flame-outer {
   position: absolute;
-  bottom: 4px;
-  left: 50%;
+  bottom: 2px; left: 50%;
   transform: translateX(-50%);
-  width: 30px;
-  height: 92px;
+  width: 13px; height: 38px;
   background: radial-gradient(ellipse at 50% 80%, #ff9200 0%, #e55000 36%, #bf2a00 66%, transparent 100%);
   border-radius: 50% 50% 36% 36% / 74% 74% 26% 26%;
-  filter: blur(2px);
+  filter: blur(1.2px);
   animation: flame-flicker-outer 1.9s ease-in-out infinite alternate;
   transform-origin: 50% 100%;
   mix-blend-mode: screen;
 }
-/* Rich yellow mid-flame */
+/* Yellow mid-flame */
 .flame-mid {
   position: absolute;
-  bottom: 4px;
-  left: 50%;
+  bottom: 2px; left: 50%;
   transform: translateX(-50%);
-  width: 20px;
-  height: 80px;
+  width: 9px; height: 32px;
   background: radial-gradient(ellipse at 50% 78%, #ffe840 0%, #ffbc00 30%, #ff7000 66%, transparent 100%);
   border-radius: 50% 50% 30% 30% / 74% 74% 26% 26%;
-  filter: blur(0.9px);
+  filter: blur(0.5px);
   animation: flame-flicker-mid 1.5s ease-in-out infinite alternate-reverse;
   transform-origin: 50% 100%;
   mix-blend-mode: screen;
 }
-/* Bright white-yellow inner core */
+/* White-yellow inner core */
 .flame-inner {
   position: absolute;
-  bottom: 6px;
-  left: 50%;
+  bottom: 3px; left: 50%;
   transform: translateX(-50%);
-  width: 11px;
-  height: 62px;
+  width: 5px; height: 24px;
   background: radial-gradient(ellipse at 50% 72%, #ffffff 0%, #fffce0 16%, #fff09a 46%, #ffdc40 70%, transparent 100%);
   border-radius: 50% 50% 24% 24% / 74% 74% 26% 26%;
-  filter: blur(0.35px);
+  filter: blur(0.25px);
   animation: flame-flicker-inner 1.2s ease-in-out infinite alternate;
   transform-origin: 50% 100%;
   mix-blend-mode: screen;
 }
-/* Faint wisp at the very tip */
+/* Wisp at tip */
 .flame-tip {
   position: absolute;
-  bottom: 84px;
-  left: 50%;
+  bottom: 34px; left: 50%;
   transform: translateX(-50%);
-  width: 6px;
-  height: 20px;
+  width: 4px; height: 9px;
   background: radial-gradient(ellipse at 50% 50%, rgba(255,240,130,0.48) 0%, transparent 100%);
   border-radius: 50%;
-  filter: blur(1.2px);
+  filter: blur(0.8px);
   animation: flame-flicker-tip 1.7s ease-in-out infinite alternate;
   transform-origin: 50% 100%;
   mix-blend-mode: screen;
 }
-/* Blue inner cone at the base */
+/* Blue inner cone at wick */
 .flame-blue {
   position: absolute;
-  bottom: 4px;
-  left: 50%;
+  bottom: 2px; left: 50%;
   transform: translateX(-50%);
-  width: 9px;
-  height: 18px;
+  width: 4px; height: 8px;
   background: radial-gradient(ellipse at 50% 76%, rgba(215,232,255,0.98) 0%, rgba(155,195,255,0.55) 55%, transparent 100%);
   border-radius: 50%;
-  filter: blur(0.5px);
+  filter: blur(0.3px);
   mix-blend-mode: screen;
   animation: flame-flicker-blue 1.1s ease-in-out infinite alternate;
   transform-origin: 50% 100%;
 }
-/* Warm glow cast downward onto candle */
+/* Warm glow on candle surface */
 .flame-light-cast {
   position: absolute;
-  bottom: -8px;
-  left: 50%;
+  bottom: -6px; left: 50%;
   transform: translateX(-50%);
-  width: 60px;
-  height: 14px;
+  width: 26px; height: 8px;
   background: radial-gradient(ellipse, rgba(255,175,50,0.26) 0%, transparent 75%);
   border-radius: 50%;
   animation: flame-halo-breathe 2s ease-in-out infinite alternate;
 }
+
+/* ── Memorial detail page — 120px candle, scale flame up ── */
+.memorial-page-flame .flame-overlay {
+  width: 44px; height: 86px;
+}
+.memorial-page-flame .flame-halo  { width: 76px; height: 76px; }
+.memorial-page-flame .flame-outer { width: 24px; height: 72px; }
+.memorial-page-flame .flame-mid   { width: 17px; height: 60px; }
+.memorial-page-flame .flame-inner { width: 9px;  height: 46px; }
+.memorial-page-flame .flame-tip   { width: 6px;  height: 17px; bottom: 64px; }
+.memorial-page-flame .flame-blue  { width: 7px;  height: 14px; }
+.memorial-page-flame .flame-light-cast { width: 48px; height: 12px; }
 
 @keyframes flame-flicker-outer {
   0%   { transform: translateX(-50%) scaleX(1)    scaleY(1)    rotate(-1.5deg); opacity: 0.92; }
